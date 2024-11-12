@@ -6,7 +6,7 @@ export const validateEmail = (email) => {
   }
 
   if (!emailPattern.test(email)) {
-    return "Enter a valid email address";
+      return "Enter a valid email address";
   }
 
   return "";
