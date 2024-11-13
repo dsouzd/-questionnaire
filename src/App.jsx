@@ -6,20 +6,15 @@ import TakeExam from "./components/Exam/TakeExam";
 import About from "./components/About/About";
 import Contact from "./components/Contact/Contact";
 import Register from "./Registration/Register";
+import Login from "./components/Login/Login";
+import Registration from "./components/Registration/Registration";
 
 const App = () => {
   return (
-    <Router>
-      <Navbar />
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/about" element={<About />} />
-        <Route path="/exam" element={<TakeExam />} />
-        <Route path="/contact" element={<Contact />} />
-        <Route path="/register" element={<Register/>} />
-      </Routes>
-    </Router>
-  );
-};
+    <>
+      Hello
+      </>
+  )
+}
 
 export default App;

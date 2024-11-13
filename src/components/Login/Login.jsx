@@ -78,7 +78,8 @@ const Login = () => {
         }, 2500);
       }
     } catch (err) {
-      setError(err.response?.data?.message || "An unexpected error occurred. Please try again.");
+      console.log(err.response.data.detail);
+      setError(err.response?.data?.detail || "An unexpected error occurred. Please try again.");
       setIsLoading(false);
     }
   };
@@ -109,7 +110,7 @@ const Login = () => {
               disabled={isLoading}
             />
             {isLoading && (
-              <FaTimes className="position-absolute" style={{ top: "50%", right: "10px", transform: "translateY(-50%)", color: "#dc3545" }} />
+              <FaTimes className="position-absolute" style={{ top: "70%", right: "10px", transform: "translateY(-50%)", color: "#dc3545" }} />
             )}
             {validationErrors.email && <p className="text-danger mt-1">{validationErrors.email}</p>}
           </div>
@@ -135,7 +136,7 @@ const Login = () => {
                 {passwordVisible ? <FaEye/> : <FaEyeSlash/>}
               </button>
               {isLoading && (
-                <FaTimes className="position-absolute" style={{ top: "50%", right: "40px", transform: "translateY(-50%)", color: "#dc3545" }} />
+                <FaTimes className="position-absolute" style={{ top: "60%", right: "44px", transform: "translateY(-50%)", color: "#dc3545" }} />
               )}
             </div>
             {validationErrors.password && <p className="text-danger mt-1">{validationErrors.password}</p>}
