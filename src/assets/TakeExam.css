@@ -1,0 +1,47 @@
+/* src/assets/TakeExam.css */
+.take-exam-container {
+    background-color: #f9f9f9;
+    max-width: 800px;
+    margin: auto;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    margin-top: 30px;
+  }
+  
+  .question-section {
+    background-color: white;
+    padding: 15px;
+    border-radius: 6px;
+    margin-bottom: 20px;
+  }
+  
+  .timer {
+    color: #8b0000;
+    font-weight: bold;
+    text-align: right;
+  }
+  
+  .option label {
+    margin-left: 8px;
+  }
+  
+  .navigation-buttons {
+    display: flex;
+    justify-content: space-between;
+  }
+  
+  .prev-btn, .next-btn, .submit-btn {
+    background-color: #8b0000;
+    color: white;
+    padding: 8px 12px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+  }
+  
+  .submit-btn {
+    background-color: #5d1111;
+  }
+  

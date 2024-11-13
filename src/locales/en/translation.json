@@ -1,0 +1,85 @@
+{
+  "quizDetails": {
+    "title": "Exam Instructions",
+    "welcome": "Welcome to the exam! Please carefully read the following instructions:",
+    "instructions": {
+      "questionTypes": "This exam consists of multiple-choice, true/false, and short-answer questions.",
+      "timeLimit": "You have a limited amount of time to complete all questions.",
+      "connection": "Ensure you have a stable internet connection during the exam.",
+      "timer": "Once you start the exam, the timer will count down continuously.",
+      "refreshWarning": "Do not refresh or close the browser window, as it may lead to disqualification.",
+      "scoreFeedback": "After submitting, you will receive your score and any applicable feedback.",
+      "support": "If you encounter any technical issues, contact support immediately."
+    },
+    "proceedButtonEnabled": "Proceed to Exam",
+    "proceedButtonDisabled": "Please read the instructions..."
+  },
+  "navbar": {
+    "brand": "QUESTIONNAIRE",
+    "home": "Home",
+    "about": "About",
+    "takeExam": "Take Exam",
+    "contact": "Contact",
+    "profile": "Profile",
+    "loginSignup": "Login/Signup",
+    "logout": "Logout",
+    "logoutConfirmTitle": "Confirm Logout",
+    "logoutConfirmMessage": "Are you sure you want to logout?",
+    "logoutCancel": "Cancel",
+    "logoutConfirm": "Yes, Logout"
+  },
+  "home": {
+    "title": "Take your <span>Exams</span> online",
+    "description": "With the help of our online examination system, you can easily create and take exams online.",
+    "button": "Get Started"
+  },
+  "registration": {
+    "title": "Create Account",
+    "subtitle": "Enter your information to create an account",
+    "firstName": "First name",
+    "lastName": "Last name",
+    "email": "Email",
+    "password": "Password",
+    "confirmPassword": "Confirm password",
+    "registerButton": "Register",
+    "registeringButton": "Registering...",
+    "loginPrompt": "Already have an account?",
+    "loginLink": "Login",
+    "successMessage": "Account successfully created!",
+    "errorMessage": "An error occurred during registration. Please try again."
+  },
+  "login": {
+    "title": "Login to MSG Account",
+    "subtitle": "Enter your credentials to access your account",
+    "emailLabel": "Email",
+    "passwordLabel": "Password",
+    "loginButton": "Login",
+    "loggingInButton": "Logging in...",
+    "loginSuccess": "Account successfully logged in!",
+    "loginError": "An unexpected error occurred. Please try again.",
+    "registerPrompt": "Don't have an account?",
+    "registerLink": "Register",
+    "invalidEmail": "Please enter a valid email address.",
+    "passwordMinLength": "Password must be at least 8 characters long."
+  },
+  "takeExam": {
+    "timerLabel": "Time Left",
+    "questionLabel": "Question",
+    "ofLabel": "of",
+    "prevButton": "Previous",
+    "nextButton": "Next",
+    "submitButton": "Submit Exam",
+    "resultsTitle": "Exam Results",
+    "scoreText": "Your Score"
+  },
+  "profile": {
+    "title": "User Profile",
+    "firstName": "First Name",
+    "lastName": "Last Name",
+    "email": "Email",
+    "editProfileButton": "Edit Profile",
+    "backToHomeButton": "Back to Home",
+    "errorFetching": "Error: User details not available.",
+    "loading": "Loading"
+  }
+}

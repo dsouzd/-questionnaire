@@ -5,16 +5,18 @@ import { Link, useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { validateForm } from "./validations/formValidation";
+import { useTranslation } from "react-i18next";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "../../assets/Registration.css";
 
 const Registration = () => {
+  const { t } = useTranslation();
   const [formData, setFormData] = useState({
     first_name: "",
     last_name: "",
     email: "",
     password: "",
-    confirmPassword: "",
+    confirmPassword: ""
   });
   const [errors, setErrors] = useState({});
   const [showPassword, setShowPassword] = useState(false);
@@ -42,9 +44,9 @@ const Registration = () => {
       setIsLoading(false);
 
       // Display success notification
-      toast.success("Account successfully created!", {
+      toast.success(t("registration.successMessage"), {
         position: "top-center",
-        autoClose: 2000,
+        autoClose: 2000
       });
 
       // Redirect to login page after a short delay
@@ -55,68 +57,62 @@ const Registration = () => {
     } catch (error) {
       setIsLoading(false);
       console.error("Registration error: ", error);
-      toast.error("An error occurred during registration. Please try again.", {
+      toast.error(t("registration.errorMessage"), {
         position: "top-center",
-        autoClose: 3000,
+        autoClose: 3000
       });
     }
   };
 
   return (
     <div className="d-flex align-items-center justify-content-center vh-100 bg-light">
-      <div
-        className="card p-4 shadow"
-        style={{ maxWidth: "400px", width: "100%" }}
-      >
+      <div className="card p-4 shadow" style={{ maxWidth: "400px", width: "100%" }}>
         <div className="text-left mb-4">
           <img
             src="https://www.msg-global.com/images/logo_msg_global_RGB.svg"
             alt="Logo"
             className="mb-2 w-25"
           />
-          <h4>Create Account</h4>
-          <p>Enter your information to create an account</p>
+          <h4>{t("registration.title")}</h4>
+          <p>{t("registration.subtitle")}</p>
         </div>
         <form onSubmit={handleSubmit}>
           <div className="form-group mb-3 position-relative">
             <input
               type="text"
-              placeholder="First name"
+              placeholder={t("registration.firstName")}
               name="first_name"
               className="form-control"
               disabled={isLoading}
               value={formData.first_name}
               onChange={handleChange}
             />
-            {isLoading && <FaTimes className="position-absolute" style={{ top: "50%", right: "10px", transform: "translateY(-50%)", color: "#dc3545" }} />}
             {errors.first_name && <p className="text-danger">{errors.first_name}</p>}
           </div>
 
           <div className="form-group mb-3 position-relative">
             <input
               type="text"
-              placeholder="Last name"
+              placeholder={t("registration.lastName")}
               name="last_name"
               className="form-control"
               disabled={isLoading}
               value={formData.last_name}
               onChange={handleChange}
             />
-            {isLoading && <FaTimes className="position-absolute" style={{ top: "50%", right: "10px", transform: "translateY(-50%)", color: "#dc3545" }} />}
             {errors.last_name && <p className="text-danger">{errors.last_name}</p>}
           </div>
 
           <div className="form-group mb-3 position-relative">
             <input
               type="text"
-              placeholder="Email"
+              placeholder={t("registration.email")}
               name="email"
               className="form-control"
               disabled={isLoading}
               value={formData.email}
               onChange={handleChange}
             />
-            {isLoading && <FaTimes className="position-absolute" style={{ top: "50%", right: "10px", transform: "translateY(-50%)", color: "#dc3545" }} />}
             {errors.email && <p className="text-danger">{errors.email}</p>}
           </div>
 
@@ -124,7 +120,7 @@ const Registration = () => {
             <div className="input-group">
               <input
                 type={showPassword ? "text" : "password"}
-                placeholder="Password"
+                placeholder={t("registration.password")}
                 name="password"
                 className="form-control"
                 disabled={isLoading}
@@ -138,7 +134,6 @@ const Registration = () => {
               >
                 {showPassword ? <FaEyeSlash /> : <FaEye />}
               </button>
-              {isLoading && <FaTimes className="position-absolute" style={{ top: "50%", right: "40px", transform: "translateY(-50%)", color: "#dc3545" }} />}
             </div>
             {errors.password && <p className="text-danger">{errors.password}</p>}
           </div>
@@ -147,7 +142,7 @@ const Registration = () => {
             <div className="input-group">
               <input
                 type={showConfirmPassword ? "text" : "password"}
-                placeholder="Confirm password"
+                placeholder={t("registration.confirmPassword")}
                 name="confirmPassword"
                 className="form-control"
                 disabled={isLoading}
@@ -161,7 +156,6 @@ const Registration = () => {
               >
                 {showConfirmPassword ? <FaEyeSlash /> : <FaEye />}
               </button>
-              {isLoading && <FaTimes className="position-absolute" style={{ top: "50%", right: "40px", transform: "translateY(-50%)", color: "#dc3545" }} />}
             </div>
             {errors.confirmPassword && <p className="text-danger">{errors.confirmPassword}</p>}
           </div>
@@ -173,13 +167,16 @@ const Registration = () => {
               style={{ backgroundColor: "#8B0000", color: "#fff" }}
               disabled={isLoading}
             >
-              {isLoading ? "Registering..." : "Register"}
+              {isLoading ? t("registration.registeringButton") : t("registration.registerButton")}
             </button>
           </div>
         </form>
 
         <p className="text-center mt-1">
-          Already have an account? <Link className="register-link-text text-decoration-none" to="/login">Login</Link>
+          {t("registration.loginPrompt")}{" "}
+          <Link className="register-link-text text-decoration-none" to="/login">
+            {t("registration.loginLink")}
+          </Link>
         </p>
       </div>
 

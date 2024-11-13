@@ -1,0 +1,86 @@
+{
+    "quizDetails": {
+      "title": "Prüfungsanweisungen",
+      "welcome": "Willkommen zur Prüfung! Bitte lesen Sie die folgenden Anweisungen sorgfältig durch:",
+      "instructions": {
+        "questionTypes": "Diese Prüfung besteht aus Multiple-Choice-, Wahr/Falsch- und Kurzantwort-Fragen.",
+        "timeLimit": "Sie haben eine begrenzte Zeit, um alle Fragen zu beantworten.",
+        "connection": "Stellen Sie sicher, dass Sie eine stabile Internetverbindung haben.",
+        "timer": "Sobald Sie die Prüfung starten, läuft der Timer kontinuierlich herunter.",
+        "refreshWarning": "Bitte aktualisieren oder schließen Sie das Browserfenster nicht, da dies zur Disqualifikation führen kann.",
+        "scoreFeedback": "Nach der Abgabe erhalten Sie Ihre Punktzahl und eventuelles Feedback.",
+        "support": "Bei technischen Problemen kontaktieren Sie sofort den Support."
+      },
+      "proceedButtonEnabled": "Zur Prüfung fortfahren",
+      "proceedButtonDisabled": "Bitte lesen Sie die Anweisungen..."
+    },
+    "navbar":{
+      "brand": "FRAGEBOGEN",
+      "home": "Startseite",
+      "about": "Über uns",
+      "takeExam": "Prüfung ablegen",
+      "contact": "Kontakt",
+      "profile": "Profil",
+      "loginSignup": "Anmelden/Registrieren",
+      "logout": "Abmelden",
+      "logoutConfirmTitle": "Abmeldung bestätigen",
+      "logoutConfirmMessage": "Sind Sie sicher, dass Sie sich abmelden möchten?",
+      "logoutCancel": "Abbrechen",
+      "logoutConfirm": "Ja, abmelden"
+    },
+    "home": {
+    "title": "Machen Sie Ihre <span>Prüfungen</span> online",
+    "description": "Mit unserem Online-Prüfungssystem können Sie ganz einfach Prüfungen erstellen und ablegen.",
+    "button": "Loslegen"
+  },
+  "registration": {
+    "title": "Konto erstellen",
+    "subtitle": "Geben Sie Ihre Informationen ein, um ein Konto zu erstellen",
+    "firstName": "Vorname",
+    "lastName": "Nachname",
+    "email": "E-Mail",
+    "password": "Passwort",
+    "confirmPassword": "Passwort bestätigen",
+    "registerButton": "Registrieren",
+    "registeringButton": "Registrierung...",
+    "loginPrompt": "Haben Sie bereits ein Konto?",
+    "loginLink": "Anmelden",
+    "successMessage": "Konto erfolgreich erstellt!",
+    "errorMessage": "Bei der Registrierung ist ein Fehler aufgetreten. Bitte versuchen Sie es erneut."
+  },
+  "login": {
+    "title": "Anmeldung bei MSG-Konto",
+    "subtitle": "Geben Sie Ihre Anmeldedaten ein, um auf Ihr Konto zuzugreifen",
+    "emailLabel": "E-Mail",
+    "passwordLabel": "Passwort",
+    "loginButton": "Anmelden",
+    "loggingInButton": "Anmeldung...",
+    "loginSuccess": "Konto erfolgreich angemeldet!",
+    "loginError": "Es ist ein unerwarteter Fehler aufgetreten. Bitte versuchen Sie es erneut.",
+    "registerPrompt": "Haben Sie noch kein Konto?",
+    "registerLink": "Registrieren",
+    "invalidEmail": "Bitte geben Sie eine gültige E-Mail-Adresse ein.",
+    "passwordMinLength": "Das Passwort muss mindestens 8 Zeichen lang sein."
+  },
+  "takeExam": {
+    "timerLabel": "Verbleibende Zeit",
+    "questionLabel": "Frage",
+    "ofLabel": "von",
+    "prevButton": "Zurück",
+    "nextButton": "Weiter",
+    "submitButton": "Prüfung abgeben",
+    "resultsTitle": "Prüfungsergebnisse",
+    "scoreText": "Ihre Punktzahl"
+  },
+  "profile": {
+    "title": "Benutzerprofil",
+    "firstName": "Vorname",
+    "lastName": "Nachname",
+    "email": "E-Mail",
+    "editProfileButton": "Profil bearbeiten",
+    "backToHomeButton": "Zurück zur Startseite",
+    "errorFetching": "Fehler: Benutzerdaten nicht verfügbar.",
+    "loading": "Wird geladen"
+  }
+  }
+  

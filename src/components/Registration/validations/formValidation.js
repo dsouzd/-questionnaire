@@ -25,7 +25,7 @@ export const validateForm = (data = {}) => {
   }
 
   if (!data.confirmPassword) {
-      errors.confirmPassword = "Confirmation Password is required";
+    errors.confirmPassword = "Confirmation Password is required";
   }
 
   return errors;

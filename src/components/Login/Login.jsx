@@ -2,16 +2,18 @@ import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { FaEye,FaEyeSlash,FaTimes } from "react-icons/fa";
-import '../../assets/Login.css';
+import { FaEye, FaEyeSlash, FaTimes } from "react-icons/fa";
+import "../../assets/Login.css";
 import "bootstrap/dist/css/bootstrap.min.css";
+import { useTranslation } from "react-i18next";
 import axios from "axios";
 
 const Login = () => {
+  const { t } = useTranslation();
   const [passwordVisible, setPasswordVisible] = useState(false);
   const [formData, setFormData] = useState({
     email: "",
-    password: "",
+    password: ""
   });
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
@@ -25,7 +27,7 @@ const Login = () => {
   const handleChange = (e) => {
     setFormData({
       ...formData,
-      [e.target.name]: e.target.value,
+      [e.target.name]: e.target.value
     });
   };
 
@@ -35,11 +37,11 @@ const Login = () => {
     const passwordMinLength = 8;
 
     if (!emailRegex.test(formData.email)) {
-      errors.email = "Please enter a valid email address.";
+      errors.email = t("login.invalidEmail");
     }
 
     if (formData.password.length < passwordMinLength) {
-      errors.password = `Password must be at least ${passwordMinLength} characters long.`;
+      errors.password = t("login.passwordMinLength", { minLength: passwordMinLength });
     }
 
     setValidationErrors(errors);
@@ -57,19 +59,16 @@ const Login = () => {
     setIsLoading(true);
 
     try {
-      const response = await axios.post(
-        "https://demo-practice.onrender.com/login",
-        formData
-      );
+      const response = await axios.post("https://demo-practice.onrender.com/login", formData);
 
       if (response.status === 200) {
         sessionStorage.setItem("email", formData.email);
         setIsLoading(false);
 
         // Display success notification
-        toast.success("Account successfully logged in!", {
+        toast.success(t("login.loginSuccess"), {
           position: "top-center",
-          autoClose: 2000,
+          autoClose: 2000
         });
 
         // Redirect to home page after a short delay
@@ -78,8 +77,7 @@ const Login = () => {
         }, 2500);
       }
     } catch (err) {
-      console.log(err.response.data.detail);
-      setError(err.response?.data?.detail || "An unexpected error occurred. Please try again.");
+      setError(err.response?.data?.detail || t("login.loginError"));
       setIsLoading(false);
     }
   };
@@ -93,18 +91,18 @@ const Login = () => {
             alt="Logo"
             className="mb-2 w-25"
           />
-          <h4>Login to MSG Account</h4>
-          <p>Enter your credentials to access your account</p>
+          <h4>{t("login.title")}</h4>
+          <p>{t("login.subtitle")}</p>
         </div>
         <form onSubmit={handleSubmit}>
           <div className="form-group mb-3 position-relative">
-            <label htmlFor="email">Email</label>
+            <label htmlFor="email">{t("login.emailLabel")}</label>
             <input
               type="text"
               id="email"
               name="email"
               className="form-control mt-2"
-              placeholder="Enter your email"
+              placeholder={t("login.emailLabel")}
               value={formData.email}
               onChange={handleChange}
               disabled={isLoading}
@@ -115,14 +113,14 @@ const Login = () => {
             {validationErrors.email && <p className="text-danger mt-1">{validationErrors.email}</p>}
           </div>
           <div className="form-group mb-3 position-relative">
-            <label htmlFor="password">Password</label>
+            <label htmlFor="password">{t("login.passwordLabel")}</label>
             <div className="input-group">
               <input
                 type={passwordVisible ? "text" : "password"}
                 id="password"
                 name="password"
                 className="form-control mt-1"
-                placeholder="Enter your password"
+                placeholder={t("login.passwordLabel")}
                 value={formData.password}
                 onChange={handleChange}
                 disabled={isLoading}
@@ -133,7 +131,7 @@ const Login = () => {
                 onClick={togglePasswordVisibility}
                 disabled={isLoading}
               >
-                {passwordVisible ? <FaEye/> : <FaEyeSlash/>}
+                {passwordVisible ? <FaEye /> : <FaEyeSlash />}
               </button>
               {isLoading && (
                 <FaTimes className="position-absolute" style={{ top: "60%", right: "44px", transform: "translateY(-50%)", color: "#dc3545" }} />
@@ -141,21 +139,18 @@ const Login = () => {
             </div>
             {validationErrors.password && <p className="text-danger mt-1">{validationErrors.password}</p>}
           </div>
-          
+
           {error && <p className="text-danger text-center mt-2">{error}</p>}
-          
-          <button type="submit" disabled={isLoading} className="custom-login-btn w-100 mt-3" style={{ backgroundColor: '#8B0000', color: '#fff' }}>
-            {isLoading ? "Logging in..." : "Login"}
+
+          <button type="submit" disabled={isLoading} className="custom-login-btn w-100 mt-3" style={{ backgroundColor: "#8B0000", color: "#fff" }}>
+            {isLoading ? t("login.loggingInButton") : t("login.loginButton")}
           </button>
 
           <div className="text-center mt-3">
             <p>
-              Don&apos;t have an account?
-              <Link
-                to="/register"
-                className="register-link text-decoration-none"
-              >
-                Register
+              {t("login.registerPrompt")}{" "}
+              <Link to="/register" className="register-link text-decoration-none">
+                {t("login.registerLink")}
               </Link>
             </p>
           </div>

@@ -1,0 +1,31 @@
+/* src/assets/LanguageDropdown.css */
+.language-dropdown-container {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    padding: 10px 20px;
+    background-color: #f8f9fa;
+  }
+  
+  .toggle-button {
+    background: none;
+    border: none;
+    color: #8b0000;
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+  
+  .dropdown .dropdown-toggle {
+    background-color: #8b0000;
+    color: white;
+  }
+  
+  .dropdown .dropdown-toggle:hover,
+  .dropdown .dropdown-toggle:focus {
+    background-color: #5d1111;
+  }
+  
