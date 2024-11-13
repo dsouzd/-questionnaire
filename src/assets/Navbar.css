@@ -28,7 +28,7 @@ ul {
   margin: 0 auto;
   justify-content: space-between;
   align-items: center;
-  padding: 10px;
+  padding: 8px;
 }
 
 .brand {
@@ -45,7 +45,7 @@ ul {
 .logo-img {
   height: 50px;
   margin-right: 8px;
-  margin-bottom: 10px;
+  margin-bottom: 15px;
 }
 
 .logo-text {
@@ -75,7 +75,6 @@ ul {
 
 .nav-link-active {
   color: #8b0000;
-  background-color: #f0f0f0;
 }
 
 .nav-link:hover {
@@ -170,7 +169,6 @@ ul {
 
   .menu-toggle {
     display: block;
-    background-color: #f1f1f1;
     padding: 10px;
     border-radius: 4px;
   }

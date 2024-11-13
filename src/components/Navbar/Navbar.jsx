@@ -1,12 +1,48 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { FaBars, FaTimes } from "react-icons/fa";
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import logo from "../../assets/logo.png";
 import "../../assets/Navbar.css";
+import gsap from "gsap";
+import { useGSAP } from "@gsap/react";
+
+
 
 const Navbar = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const navigate = useNavigate();
+
+  useGSAP(() => {
+    gsap.from(".logo", {
+      opacity: 0,
+      duration: 1,
+      delay: 0.5,
+      y: -50,
+    });
+
+    gsap.from(".nav-links li", {
+      opacity: 0,
+      duration: 1,
+      delay: 0.5,
+      y: -50,
+      stagger: 0.2,
+      ease: "back.inOut",
+    });
+    gsap.from(".login-button", {
+      opacity: 0,
+      duration: 0.7,
+      delay: 0.5,
+      y: -50,
+    });
+    gsap.from(".menu-toggle", {
+      opacity: 0,
+      duration: 0.7,
+      delay: 0.5,
+      y: -50,
+    });
+  });
+
+
 
   const toggleMenu = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
