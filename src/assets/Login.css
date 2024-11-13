@@ -1,0 +1,17 @@
+.custom-login-btn {
+    background-color: #8B0000;
+    color: #ffffff;
+    border: none;
+    border-radius: 3px;
+    margin-top: 2px;
+    padding: 8px;
+  }
+  
+  .custom-login-btn:hover {
+    background-color: #A52A2A;
+    color: #ffffff;
+  }
+  
+  .register-link{
+    color: #8B0000;
+  }
