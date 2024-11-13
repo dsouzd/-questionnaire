@@ -1,0 +1,175 @@
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+a {
+  text-decoration: none;
+}
+
+ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.navbar {
+  background-color: white;
+  width: 100%;
+  top: 0;
+  left: 0;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.container {
+  max-width: 1200px;
+  display: flex;
+  margin: 0 auto;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+}
+
+.logo-img {
+  height: 50px;
+  margin-right: 8px;
+  margin-bottom: 15px;
+}
+
+.logo-text {
+  font-size: 24px;
+  font-weight: bold;
+  color: #1a202c;
+}
+
+.nav-links {
+  display: flex;
+  align-items: center;
+}
+
+.nav-links ul {
+  display: flex;
+  gap: 24px;
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+.nav-link {
+  font-size: 16px;
+  color: #333;
+  padding: 8px;
+  transition: all 0.3s ease;
+}
+
+.nav-link-active {
+  color: #8b0000;
+}
+
+.nav-link:hover {
+  background-color: #f0f0f0;
+  color: #8b0000;
+  border-radius: 4px;
+}
+
+.button-group {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.login-button {
+  background-color: #8b0000;
+  color: white;
+  font-size: 14px;
+  font-weight: 500;
+  padding: 10px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  border: none;
+  transition: background-color 0.3s ease;
+}
+
+.login-button:hover {
+  background-color: #5d1111;
+}
+
+.menu-toggle {
+  display: none;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+}
+
+.menu-icon {
+  width: 20px;
+  height: 20px;
+  stroke: #333;
+}
+
+.mobile-login {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .logo-text {
+    font-size: 2vh;
+  }
+
+  .login-button.desktop {
+    display: none;
+  }
+
+  .mobile-login {
+    display: block;
+    margin-top: 10px;
+  }
+
+  .login-button.mobile {
+    display: block;
+    width: 100%;
+  }
+
+  .nav-links {
+    display: none;
+    width: 100%;
+    background-color: #f1f1f1;
+    position: absolute;
+    top: 60px;
+    left: 0;
+    padding: 10px;
+    box-sizing: border-box;
+    height: auto;
+    max-height: 80vh;
+    overflow-y: auto;
+  }
+
+  .nav-links.active {
+    display: block;
+    margin-top: 10px;
+  }
+
+  .nav-links ul {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+    padding-left: 10px;
+  }
+
+  .menu-toggle {
+    display: block;
+    padding: 10px;
+    border-radius: 4px;
+  }
+}

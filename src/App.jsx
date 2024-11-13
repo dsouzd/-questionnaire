@@ -1,17 +1,20 @@
-import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import Login from './components/Login/Login';
-import Registration from './components/Registration/Registration';
+import React from "react";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import Navbar from "./components/Navbar/Navbar";
+import Home from "./components/Home/Home";
+import TakeExam from "./components/Exam/TakeExam";
+import About from "./components/About/About";
+import Contact from "./components/Contact/Contact";
+import Register from "./Registration/Register";
+import Login from "./components/Login/Login";
+import Registration from "./components/Registration/Registration";
 
 const App = () => {
   return (
-    <Router>
-      <Routes>
-        <Route path="/register" element={<Registration />} />
-        <Route path="/login" element={<Login />} />
-      </Routes>
-    </Router>
-  );
-};
+    <>
+      Hello
+      </>
+  )
+}
 
 export default App;
