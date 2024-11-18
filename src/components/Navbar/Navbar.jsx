@@ -1,16 +1,18 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { FaBars, FaTimes } from "react-icons/fa";
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import logo from "../../assets/logo.png";
 import "../../assets/Navbar.css";
-import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
-
-
+import gsap from "gsap";
+import { useTranslation } from "react-i18next";
+import { useUser } from "../context/UserContext";
 
 const Navbar = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const navigate = useNavigate();
+  const { t, i18n } = useTranslation();
+  const { userDetails } = useUser();
 
   useGSAP(() => {
     gsap.from(".logo", {
@@ -19,7 +21,6 @@ const Navbar = () => {
       delay: 0.5,
       y: -50,
     });
-
     gsap.from(".nav-links li", {
       opacity: 0,
       duration: 1,
@@ -30,26 +31,43 @@ const Navbar = () => {
     });
     gsap.from(".login-button", {
       opacity: 0,
-      duration: 0.7,
+      duration: 1,
       delay: 0.5,
       y: -50,
+      ease: "back.inOut",
     });
     gsap.from(".menu-toggle", {
       opacity: 0,
       duration: 0.7,
       delay: 0.5,
       y: -50,
+      ease: "back.inOut",
+    });
+    gsap.from("select", {
+      opacity: 0,
+      duration: 1,
+      delay: 0.5,
+      y: -50,
+      ease: "back.inOut",
     });
   });
-
-
 
   const toggleMenu = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
   };
 
   const handleLoginSignupClick = () => {
-    navigate("/register");
+    navigate("/registration");
+  };
+
+  const handleProfileClick = () => {
+    navigate("/profile");
+  };
+
+  const handleLanguageChange = (e) => {
+    const selectedLanguage = e.target.value;
+    i18n.changeLanguage(selectedLanguage);
+    console.log(selectedLanguage);
   };
 
   return (
@@ -57,8 +75,8 @@ const Navbar = () => {
       <div className="container">
         <div className="brand">
           <Link to="/" className="logo">
-            <img src={logo} className="logo-img" alt="Logo" />
-            <span className="logo-text">QUESTIONNAIRE</span>
+            <img src={logo} className="logo-img" alt="logo" />
+            <span className="logo-text">{t("brand")}</span>
           </Link>
         </div>
 
@@ -74,7 +92,7 @@ const Navbar = () => {
                   isActive ? "nav-link nav-link-active" : "nav-link"
                 }
               >
-                Home
+                {t("home")}
               </NavLink>
             </li>
             <li>
@@ -84,7 +102,7 @@ const Navbar = () => {
                   isActive ? "nav-link nav-link-active" : "nav-link"
                 }
               >
-                About
+                {t("about")}
               </NavLink>
             </li>
             <li>
@@ -94,7 +112,7 @@ const Navbar = () => {
                   isActive ? "nav-link nav-link-active" : "nav-link"
                 }
               >
-                Take Exam
+                {t("exam")}
               </NavLink>
             </li>
             <li>
@@ -104,28 +122,46 @@ const Navbar = () => {
                   isActive ? "nav-link nav-link-active" : "nav-link"
                 }
               >
-                Contact
+                {t("contact")}
               </NavLink>
             </li>
             <li className="mobile-login">
-              <button
-                onClick={handleLoginSignupClick}
-                className="login-button mobile"
-              >
-                Login/Signup
-              </button>
+              {!userDetails ? (
+                <button
+                  onClick={handleLoginSignupClick}
+                  className="login-button mobile"
+                >
+                  {t("loginSignup")}
+                </button>
+              ) : (
+                <span
+                  onClick={handleProfileClick}
+                  className="login-button mobile"
+                >{`${t("hi")}, ${userDetails.first_name}`}</span>
+              )}
             </li>
           </ul>
         </div>
 
         <div className="button-group">
-          <button
-            onClick={handleLoginSignupClick}
-            className="login-button desktop"
-          >
-            Login/Signup
-          </button>
+          {!userDetails ? (
+            <button
+              onClick={handleLoginSignupClick}
+              className="login-button desktop"
+            >
+              {t("logins")}
+            </button>
+          ) : (
+            <span onClick={handleProfileClick} className="login-button desktop">
+              {`${t("hi")}, ${userDetails.first_name}`}
+            </span>
+          )}
         </div>
+
+        <select onChange={handleLanguageChange} value={i18n.language}>
+          <option value="en">En</option>
+          <option value="de">De</option>
+        </select>
 
         <button onClick={toggleMenu} className="menu-toggle">
           {isMobileMenuOpen ? (

@@ -1,14 +1,22 @@
+import { doc } from "firebase/firestore";
 import React, { useState } from "react";
 import { FaEye, FaEyeSlash, FaTimes } from "react-icons/fa";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { validateForm } from "./validations/formValidation";
+import { validateForm } from "../../validations/formValidations";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "../../assets/Registration.css";
+import logo from "../../assets/logo.png";
+import { useTranslation } from "react-i18next";
+import { createUserWithEmailAndPassword } from "firebase/auth";
+import { auth, db } from "../../firebase";
+import { setDoc } from "firebase/firestore";
+import GoogleLogin from "../Login/GoogleLogin";
 
 const Registration = () => {
+  const { t } = useTranslation();
   const [formData, setFormData] = useState({
     first_name: "",
     last_name: "",
@@ -30,7 +38,7 @@ const Registration = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const validationErrors = validateForm(formData);
+    const validationErrors = validateForm(formData, "registration");
     setErrors(validationErrors);
 
     if (Object.values(validationErrors).some((error) => error !== "")) return;
@@ -38,24 +46,40 @@ const Registration = () => {
     setIsLoading(true);
 
     try {
-      await axios.post("https://demo-practice.onrender.com/register", formData);
-      setIsLoading(false);
+      const userCredentials = await createUserWithEmailAndPassword(
+        auth,
+        formData.email,
+        formData.password
+      );
 
-      // Display success notification
-      toast.success("Account successfully created!", {
+      const user = userCredentials.user;
+
+      await setDoc(doc(db, "users", user.uid), {
+        uid: user.uid,
+        first_name: formData.first_name,
+        last_name: formData.last_name,
+        email: formData.email,
+        createdAt: new Date(),
+      });
+
+      toast.success(t("success_register"), {
         position: "top-center",
         autoClose: 2000,
       });
+      setIsLoading(false);
 
-      // Redirect to login page after a short delay
       setTimeout(() => {
         navigate("/login");
       }, 2500);
-
     } catch (error) {
       setIsLoading(false);
-      console.error("Registration error: ", error);
-      toast.error("An error occurred during registration. Please try again.", {
+
+      let errorMessage = "An error occurred. Please try again.";
+      if (error.code === "auth/email-already-in-use") {
+        errorMessage = "The email address is already in use.";
+      }
+
+      toast.error(errorMessage, {
         position: "top-center",
         autoClose: 3000,
       });
@@ -63,129 +87,210 @@ const Registration = () => {
   };
 
   return (
-    <div className="d-flex align-items-center justify-content-center vh-100 bg-light">
-      <div
-        className="card p-4 shadow"
-        style={{ maxWidth: "400px", width: "100%" }}
-      >
-        <div className="text-left mb-4">
-          <img
-            src="https://www.msg-global.com/images/logo_msg_global_RGB.svg"
-            alt="Logo"
-            className="mb-2 w-25"
-          />
-          <h4>Create Account</h4>
-          <p>Enter your information to create an account</p>
-        </div>
-        <form onSubmit={handleSubmit}>
-          <div className="form-group mb-3 position-relative">
-            <input
-              type="text"
-              placeholder="First name"
-              name="first_name"
-              className="form-control"
-              disabled={isLoading}
-              value={formData.first_name}
-              onChange={handleChange}
-            />
-            {isLoading && <FaTimes className="position-absolute" style={{ top: "50%", right: "10px", transform: "translateY(-50%)", color: "#dc3545" }} />}
-            {errors.first_name && <p className="text-danger">{errors.first_name}</p>}
+    <>
+      <div className="d-flex align-items-center justify-content-center m-5 vh-100 ">
+        <div
+          className="card p-4 shadow"
+          style={{ maxWidth: "400px", width: "100%" }}
+        >
+          <div className="text-left mb-4">
+            <div className="logo-info">
+              <img
+                src={logo}
+                alt="Logo"
+                className="mb-2"
+                style={{ width: "10%" }}
+              />
+              <span className="logo-text-log">{t("brand")}</span>
+            </div>
+            <h4>{t("register_title")}</h4>
+            <p>{t("register_description")}</p>
           </div>
-
-          <div className="form-group mb-3 position-relative">
-            <input
-              type="text"
-              placeholder="Last name"
-              name="last_name"
-              className="form-control"
-              disabled={isLoading}
-              value={formData.last_name}
-              onChange={handleChange}
-            />
-            {isLoading && <FaTimes className="position-absolute" style={{ top: "50%", right: "10px", transform: "translateY(-50%)", color: "#dc3545" }} />}
-            {errors.last_name && <p className="text-danger">{errors.last_name}</p>}
-          </div>
-
-          <div className="form-group mb-3 position-relative">
-            <input
-              type="text"
-              placeholder="Email"
-              name="email"
-              className="form-control"
-              disabled={isLoading}
-              value={formData.email}
-              onChange={handleChange}
-            />
-            {isLoading && <FaTimes className="position-absolute" style={{ top: "50%", right: "10px", transform: "translateY(-50%)", color: "#dc3545" }} />}
-            {errors.email && <p className="text-danger">{errors.email}</p>}
-          </div>
-
-          <div className="form-group mb-3 position-relative">
-            <div className="input-group">
+          <form onSubmit={handleSubmit}>
+            <div className="form-group mb-3 position-relative">
               <input
-                type={showPassword ? "text" : "password"}
-                placeholder="Password"
-                name="password"
+                type="text"
+                placeholder={t("first_name")}
+                name="first_name"
                 className="form-control"
                 disabled={isLoading}
-                value={formData.password}
+                value={formData.first_name}
                 onChange={handleChange}
               />
-              <button
-                type="button"
-                className="btn btn-outline-secondary"
-                onClick={() => setShowPassword(!showPassword)}
-              >
-                {showPassword ? <FaEyeSlash /> : <FaEye />}
-              </button>
-              {isLoading && <FaTimes className="position-absolute" style={{ top: "50%", right: "40px", transform: "translateY(-50%)", color: "#dc3545" }} />}
+              {isLoading && (
+                <FaTimes
+                  className="position-absolute"
+                  style={{
+                    top: "50%",
+                    right: "10px",
+                    transform: "translateY(-50%)",
+                    color: "#dc3545",
+                  }}
+                />
+              )}
+              {errors.first_name && (
+                <p className="text-danger">{errors.first_name}</p>
+              )}
             </div>
-            {errors.password && <p className="text-danger">{errors.password}</p>}
-          </div>
 
-          <div className="form-group mb-3 position-relative">
-            <div className="input-group">
+            <div className="form-group mb-3 position-relative">
               <input
-                type={showConfirmPassword ? "text" : "password"}
-                placeholder="Confirm password"
-                name="confirmPassword"
+                type="text"
+                placeholder={t("last_name")}
+                name="last_name"
                 className="form-control"
                 disabled={isLoading}
-                value={formData.confirmPassword}
+                value={formData.last_name}
                 onChange={handleChange}
               />
-              <button
-                type="button"
-                className="btn btn-outline-secondary"
-                onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-              >
-                {showConfirmPassword ? <FaEyeSlash /> : <FaEye />}
-              </button>
-              {isLoading && <FaTimes className="position-absolute" style={{ top: "50%", right: "40px", transform: "translateY(-50%)", color: "#dc3545" }} />}
+              {isLoading && (
+                <FaTimes
+                  className="position-absolute"
+                  style={{
+                    top: "50%",
+                    right: "10px",
+                    transform: "translateY(-50%)",
+                    color: "#dc3545",
+                  }}
+                />
+              )}
+              {errors.last_name && (
+                <p className="text-danger">{errors.last_name}</p>
+              )}
             </div>
-            {errors.confirmPassword && <p className="text-danger">{errors.confirmPassword}</p>}
-          </div>
 
-          <div className="form-group mb-3">
-            <button
-              type="submit"
-              className="btn w-100"
-              style={{ backgroundColor: "#8B0000", color: "#fff" }}
-              disabled={isLoading}
+            <div className="form-group mb-3 position-relative">
+              <input
+                type="text"
+                placeholder={t("email_placeholder")}
+                name="email"
+                className="form-control"
+                disabled={isLoading}
+                value={formData.email}
+                onChange={handleChange}
+              />
+              {isLoading && (
+                <FaTimes
+                  className="position-absolute"
+                  style={{
+                    top: "50%",
+                    right: "10px",
+                    transform: "translateY(-50%)",
+                    color: "#dc3545",
+                  }}
+                />
+              )}
+              {errors.email && <p className="text-danger">{errors.email}</p>}
+            </div>
+
+            <div className="form-group mb-3 position-relative">
+              <div className="input-group">
+                <input
+                  type={showPassword ? "text" : "password"}
+                  placeholder={t("password_placeholder")}
+                  name="password"
+                  className="form-control"
+                  disabled={isLoading}
+                  value={formData.password}
+                  onChange={handleChange}
+                />
+                <button
+                  type="button"
+                  className="btn btn-outline-secondary"
+                  onClick={() => setShowPassword(!showPassword)}
+                >
+                  {showPassword ? <FaEyeSlash /> : <FaEye />}
+                </button>
+                {isLoading && (
+                  <FaTimes
+                    className="position-absolute"
+                    style={{
+                      top: "50%",
+                      right: "40px",
+                      transform: "translateY(-50%)",
+                      color: "#dc3545",
+                    }}
+                  />
+                )}
+              </div>
+              {errors.password && (
+                <p className="text-danger">{errors.password}</p>
+              )}
+            </div>
+
+            <div className="form-group mb-3 position-relative">
+              <div className="input-group">
+                <input
+                  type={showConfirmPassword ? "text" : "password"}
+                  placeholder={t("confirm_password")}
+                  name="confirmPassword"
+                  className="form-control"
+                  disabled={isLoading}
+                  value={formData.confirmPassword}
+                  onChange={handleChange}
+                />
+                <button
+                  type="button"
+                  className="btn btn-outline-secondary"
+                  onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                >
+                  {showConfirmPassword ? <FaEyeSlash /> : <FaEye />}
+                </button>
+                {isLoading && (
+                  <FaTimes
+                    className="position-absolute"
+                    style={{
+                      top: "50%",
+                      right: "40px",
+                      transform: "translateY(-50%)",
+                      color: "#dc3545",
+                    }}
+                  />
+                )}
+              </div>
+              {errors.confirmPassword && (
+                <p className="text-danger">{errors.confirmPassword}</p>
+              )}
+            </div>
+
+            <div className="form-group mb-3">
+              <button
+                type="submit"
+                className="btn w-100"
+                style={{ backgroundColor: "#8B0000", color: "#fff" }}
+                disabled={isLoading}
+              >
+                {isLoading ? t("registering") : t("register")}
+              </button>
+            </div>
+          </form>
+
+          <p className="text-center mt-1">
+            {t("already_have_account")}{" "}
+            <Link
+              className="register-link-text text-decoration-none"
+              to="/login"
             >
-              {isLoading ? "Registering..." : "Register"}
-            </button>
+              {t("login")}
+            </Link>
+          </p>
+          <p className="or">or</p>
+
+          <div className="socials">
+            
+            <GoogleLogin/>
+
+            {/* <button className="facebook-btn">
+              <FontAwesomeIcon icon={faFacebookF} className="facebook-icon" />
+              Sign in with Facebook
+            </button> */}
           </div>
-        </form>
+        </div>
 
-        <p className="text-center mt-1">
-          Already have an account? <Link className="register-link-text text-decoration-none" to="/login">Login</Link>
-        </p>
+        {/* Toast Container for notifications */}
+        <ToastContainer />
       </div>
-
-      {/* Toast Container for notifications */}
-      <ToastContainer />
-    </div>
+    </>
   );
 };
 

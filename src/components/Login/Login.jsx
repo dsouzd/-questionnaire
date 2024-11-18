@@ -2,12 +2,20 @@ import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { FaEye,FaEyeSlash,FaTimes } from "react-icons/fa";
-import '../../assets/Login.css';
+import { FaEye, FaEyeSlash, FaTimes } from "react-icons/fa";
+import "../../assets/Login.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import axios from "axios";
+import { useTranslation } from "react-i18next";
+import logo from "../../assets/logo.png";
+import { useUser } from "../context/UserContext";
+import { validateForm } from "../../validations/formValidations";
+import { signInWithEmailAndPassword } from "firebase/auth";
+import { auth, db } from "../../firebase";
+import { doc, getDoc } from "firebase/firestore";
 
 const Login = () => {
+  const { t } = useTranslation();
   const [passwordVisible, setPasswordVisible] = useState(false);
   const [formData, setFormData] = useState({
     email: "",
@@ -17,6 +25,7 @@ const Login = () => {
   const [error, setError] = useState("");
   const [validationErrors, setValidationErrors] = useState({});
   const navigate = useNavigate();
+  const { setEmail, setUserDetails } = useUser();
 
   const togglePasswordVisibility = () => {
     setPasswordVisible(!passwordVisible);
@@ -29,100 +38,109 @@ const Login = () => {
     });
   };
 
-  const validateForm = () => {
-    let errors = {};
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    const passwordMinLength = 8;
-
-    if (!emailRegex.test(formData.email)) {
-      errors.email = "Please enter a valid email address.";
-    }
-
-    if (formData.password.length < passwordMinLength) {
-      errors.password = `Password must be at least ${passwordMinLength} characters long.`;
-    }
-
-    setValidationErrors(errors);
-    return errors;
-  };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
+    console.log("Form submitted");
     setError("");
+    const errors = validateForm(formData, "login");
+    if (Object.keys(errors).length > 0) {
+      setValidationErrors(errors);
+      return;
+    }
     setValidationErrors({});
-
-    const errors = validateForm();
-    if (Object.keys(errors).length > 0) return; // Stop if there are validation errors
-
     setIsLoading(true);
 
     try {
-      const response = await axios.post(
-        "https://demo-practice.onrender.com/login",
-        formData
+
+      const userCredentials = await signInWithEmailAndPassword(
+        auth,
+        formData.email,
+        formData.password
       );
+      const user = userCredentials.user;
+      setEmail(formData.email);
 
-      if (response.status === 200) {
-        sessionStorage.setItem("email", formData.email);
-        setIsLoading(false);
-
-        // Display success notification
-        toast.success("Account successfully logged in!", {
-          position: "top-center",
-          autoClose: 2000,
-        });
-
-        // Redirect to home page after a short delay
-        setTimeout(() => {
-          navigate("/home");
-        }, 2500);
+      const userDoc = await getDoc(doc(db, "users", user.uid));
+      if (userDoc.exists()) {
+        const userData = userDoc.data();
+        setUserDetails(userData);
+        localStorage.setItem("userDetails", JSON.stringify(userData));
       }
+      setIsLoading(false);
+
+      // Display success notification
+      toast.success("Account successfully logged in!", {
+        position: "top-center",
+        autoClose: 2000,
+      });
+
+      // Redirect to home page after a short delay
+      setTimeout(() => {
+        navigate("/");
+      }, 2500);
     } catch (err) {
-      console.log(err.response.data.detail);
-      setError(err.response?.data?.detail || "An unexpected error occurred. Please try again.");
+      console.log(err);
+      setError(
+        err.response?.data?.detail ||
+          "An unexpected error occurred. Please try again."
+      );
       setIsLoading(false);
     }
   };
 
   return (
-    <div className="d-flex align-items-center justify-content-center vh-100 bg-light">
-      <div className="card p-4 shadow" style={{ maxWidth: "400px", width: "100%" }}>
+    <div className="d-flex a justify-content-center mt-5">
+      <div
+        className="card p-4 shadow"
+        style={{ maxWidth: "400px", width: "100%" }}
+      >
         <div className="text-left mb-1">
           <img
-            src="https://www.msg-global.com/images/logo_msg_global_RGB.svg"
+            src={logo}
             alt="Logo"
-            className="mb-2 w-25"
+            className="mb-2"
+            style={{ width: "10%" }}
           />
-          <h4>Login to MSG Account</h4>
-          <p>Enter your credentials to access your account</p>
+          <span className="log-logo">{t("brand")}</span>
+          <h4>{t("login_title")}</h4>
         </div>
         <form onSubmit={handleSubmit}>
           <div className="form-group mb-3 position-relative">
-            <label htmlFor="email">Email</label>
+            <label htmlFor="email">{t("email_label")}</label>
             <input
               type="text"
               id="email"
               name="email"
               className="form-control mt-2"
-              placeholder="Enter your email"
+              placeholder={t("email_placeholder")}
               value={formData.email}
               onChange={handleChange}
               disabled={isLoading}
             />
             {isLoading && (
-              <FaTimes className="position-absolute" style={{ top: "70%", right: "10px", transform: "translateY(-50%)", color: "#dc3545" }} />
+              <FaTimes
+                className="position-absolute"
+                style={{
+                  top: "70%",
+                  right: "10px",
+                  transform: "translateY(-50%)",
+                  color: "#dc3545",
+                }}
+              />
             )}
-            {validationErrors.email && <p className="text-danger mt-1">{validationErrors.email}</p>}
+            {validationErrors.email && (
+              <p className="text-danger mt-1">{validationErrors.email}</p>
+            )}
           </div>
           <div className="form-group mb-3 position-relative">
-            <label htmlFor="password">Password</label>
+            <label htmlFor="password">{t("password_label")}</label>
             <div className="input-group">
               <input
                 type={passwordVisible ? "text" : "password"}
                 id="password"
                 name="password"
                 className="form-control mt-1"
-                placeholder="Enter your password"
+                placeholder={t("password_placeholder")}
                 value={formData.password}
                 onChange={handleChange}
                 disabled={isLoading}
@@ -133,29 +151,44 @@ const Login = () => {
                 onClick={togglePasswordVisibility}
                 disabled={isLoading}
               >
-                {passwordVisible ? <FaEye/> : <FaEyeSlash/>}
+                {passwordVisible ? <FaEye /> : <FaEyeSlash />}
               </button>
               {isLoading && (
-                <FaTimes className="position-absolute" style={{ top: "60%", right: "44px", transform: "translateY(-50%)", color: "#dc3545" }} />
+                <FaTimes
+                  className="position-absolute"
+                  style={{
+                    top: "60%",
+                    right: "44px",
+                    transform: "translateY(-50%)",
+                    color: "#dc3545",
+                  }}
+                />
               )}
             </div>
-            {validationErrors.password && <p className="text-danger mt-1">{validationErrors.password}</p>}
+            {validationErrors.password && (
+              <p className="text-danger mt-1">{validationErrors.password}</p>
+            )}
           </div>
-          
+
           {error && <p className="text-danger text-center mt-2">{error}</p>}
-          
-          <button type="submit" disabled={isLoading} className="custom-login-btn w-100 mt-3" style={{ backgroundColor: '#8B0000', color: '#fff' }}>
-            {isLoading ? "Logging in..." : "Login"}
+
+          <button
+            type="submit"
+            disabled={isLoading}
+            className="custom-login-btn w-100 mt-3"
+            style={{ backgroundColor: "#8B0000", color: "#fff" }}
+          >
+            {isLoading ? t("logging_in") : t("login")}
           </button>
 
           <div className="text-center mt-3">
             <p>
-              Don&apos;t have an account?
+              {t("login_desc")}{" "}
               <Link
-                to="/register"
+                to="/registration"
                 className="register-link text-decoration-none"
               >
-                Register
+                {t("register")}
               </Link>
             </p>
           </div>
