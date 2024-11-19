@@ -33,7 +33,7 @@ const Home = () => {
         <p>{t("home_description")}</p>
         <button className="hero-btn">{t("home_get_started")}</button>
       </div>
-      <div className="hero-right">
+      <div className="hero-right">  
         <img src={exam} alt="hero-img" />
       </div>
     </div>
