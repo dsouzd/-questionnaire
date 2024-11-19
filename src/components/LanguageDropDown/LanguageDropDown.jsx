@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Dropdown } from "react-bootstrap";
 import { FaPlus, FaMinus } from "react-icons/fa"; // Import icons for '+' and '-'
-import "../../assets/LanguageDropdown.css";
+import "../../assets/LanguageDropDown.css";
 import { useTranslation } from "react-i18next";
 
 const LanguageDropdown = () => {
