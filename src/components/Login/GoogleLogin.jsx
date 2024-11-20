@@ -44,7 +44,7 @@ const GoogleLogin = () => {
       }
 
       toast.success("Logged in successfully with Google!");
-      navigate("/exam");
+      navigate("/instructions");
     } catch (error) {
       toast.error("Error logging in with Google: " + error.message);
     }

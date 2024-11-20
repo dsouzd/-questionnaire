@@ -101,7 +101,7 @@ const Login = () => {
       localStorage.setItem("userDetails", JSON.stringify(userData));
 
       toast.success("Successfully logged in!", { autoClose: 2000 });
-      setTimeout(() => navigate("/"), 2000);
+      setTimeout(() => navigate("/instructions"), 2000);
     } catch (err) {
       let errorMessage = "An unexpected error occured";
       if ((err.code = "auth/invalid-email")) {

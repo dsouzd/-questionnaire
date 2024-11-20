@@ -1,7 +1,5 @@
-import { doc } from "firebase/firestore";
 import React, { useState } from "react";
 import { FaEye, FaEyeSlash, FaTimes } from "react-icons/fa";
-import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -10,9 +8,9 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "../../assets/Registration.css";
 import logo from "../../assets/logo.png";
 import { useTranslation } from "react-i18next";
-import { createUserWithEmailAndPassword } from "firebase/auth";
-import { auth, db } from "../../firebase";
-import { setDoc } from "firebase/firestore";
+import { doc, setDoc } from "firebase/firestore";
+import { db } from "../../firebase";
+import bcrypt from "bcryptjs";
 import GoogleLogin from "../Login/GoogleLogin";
 
 const Registration = () => {
@@ -46,19 +44,15 @@ const Registration = () => {
     setIsLoading(true);
 
     try {
-      const userCredentials = await createUserWithEmailAndPassword(
-        auth,
-        formData.email,
-        formData.password
-      );
+      // Hash the password using bcrypt
+      const hashedPassword = await bcrypt.hash(formData.password, 10);
 
-      const user = userCredentials.user;
-
-      await setDoc(doc(db, "users", user.uid), {
-        uid: user.uid,
+      // Store user details in Firestore
+      await setDoc(doc(db, "users", formData.email), {
         first_name: formData.first_name,
         last_name: formData.last_name,
         email: formData.email,
+        password: hashedPassword, // Store hashed password
         createdAt: new Date(),
       });
 
@@ -68,6 +62,7 @@ const Registration = () => {
       });
       setIsLoading(false);
 
+      // Navigate to login page after successful registration
       setTimeout(() => {
         navigate("/login");
       }, 2500);
@@ -75,10 +70,7 @@ const Registration = () => {
       setIsLoading(false);
 
       let errorMessage = "An error occurred. Please try again.";
-      if (error.code === "auth/email-already-in-use") {
-        errorMessage = "The email address is already in use.";
-      }
-
+      console.error(error);
       toast.error(errorMessage, {
         position: "top-center",
         autoClose: 3000,
@@ -117,17 +109,6 @@ const Registration = () => {
                 value={formData.first_name}
                 onChange={handleChange}
               />
-              {isLoading && (
-                <FaTimes
-                  className="position-absolute"
-                  style={{
-                    top: "50%",
-                    right: "10px",
-                    transform: "translateY(-50%)",
-                    color: "#dc3545",
-                  }}
-                />
-              )}
               {errors.first_name && (
                 <p className="text-danger">{errors.first_name}</p>
               )}
@@ -143,17 +124,6 @@ const Registration = () => {
                 value={formData.last_name}
                 onChange={handleChange}
               />
-              {isLoading && (
-                <FaTimes
-                  className="position-absolute"
-                  style={{
-                    top: "50%",
-                    right: "10px",
-                    transform: "translateY(-50%)",
-                    color: "#dc3545",
-                  }}
-                />
-              )}
               {errors.last_name && (
                 <p className="text-danger">{errors.last_name}</p>
               )}
@@ -169,17 +139,6 @@ const Registration = () => {
                 value={formData.email}
                 onChange={handleChange}
               />
-              {isLoading && (
-                <FaTimes
-                  className="position-absolute"
-                  style={{
-                    top: "50%",
-                    right: "10px",
-                    transform: "translateY(-50%)",
-                    color: "#dc3545",
-                  }}
-                />
-              )}
               {errors.email && <p className="text-danger">{errors.email}</p>}
             </div>
 
@@ -201,17 +160,6 @@ const Registration = () => {
                 >
                   {showPassword ? <FaEyeSlash /> : <FaEye />}
                 </button>
-                {isLoading && (
-                  <FaTimes
-                    className="position-absolute"
-                    style={{
-                      top: "50%",
-                      right: "40px",
-                      transform: "translateY(-50%)",
-                      color: "#dc3545",
-                    }}
-                  />
-                )}
               </div>
               {errors.password && (
                 <p className="text-danger">{errors.password}</p>
@@ -236,17 +184,6 @@ const Registration = () => {
                 >
                   {showConfirmPassword ? <FaEyeSlash /> : <FaEye />}
                 </button>
-                {isLoading && (
-                  <FaTimes
-                    className="position-absolute"
-                    style={{
-                      top: "50%",
-                      right: "40px",
-                      transform: "translateY(-50%)",
-                      color: "#dc3545",
-                    }}
-                  />
-                )}
               </div>
               {errors.confirmPassword && (
                 <p className="text-danger">{errors.confirmPassword}</p>
@@ -278,11 +215,6 @@ const Registration = () => {
 
           <div className="socials">
             <GoogleLogin />
-
-            {/* <button className="facebook-btn">
-              <FontAwesomeIcon icon={faFacebookF} className="facebook-icon" />
-              Sign in with Facebook
-            </button> */}
           </div>
         </div>
 
