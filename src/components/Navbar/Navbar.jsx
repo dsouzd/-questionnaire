@@ -80,7 +80,7 @@ const Navbar = () => {
         <div className="brand">
           <Link to="/" className="logo">
             <img src={logo} className="logo-img" alt="logo" />
-            <span className="logo-text">{t("brand")}</span>
+            <span className="logo-text">{t("navbar.brand")}</span>
           </Link>
         </div>
 
@@ -88,7 +88,7 @@ const Navbar = () => {
           className={`nav-links ${isMobileMenuOpen ? "active" : ""}`}
           id="navbar-sticky"
         >
-          <ul>
+          <ul className="nav-ul">
             <li>
               <NavLink
                 to="/"
@@ -96,7 +96,7 @@ const Navbar = () => {
                   isActive ? "nav-link nav-link-active" : "nav-link"
                 }
               >
-                {t("home")}
+                {t("navbar.home")}
               </NavLink>
             </li>
             <li>
@@ -106,17 +106,17 @@ const Navbar = () => {
                   isActive ? "nav-link nav-link-active" : "nav-link"
                 }
               >
-                {t("about")}
+                {t("navbar.about")}
               </NavLink>
             </li>
             <li>
               <NavLink
-                to="/exam"
+                to="/instructions"
                 className={({ isActive }) =>
                   isActive ? "nav-link nav-link-active" : "nav-link"
                 }
               >
-                {t("exam")}
+                {t("navbar.exam")}
               </NavLink>
             </li>
             <li>
@@ -126,7 +126,7 @@ const Navbar = () => {
                   isActive ? "nav-link nav-link-active" : "nav-link"
                 }
               >
-                {t("contact")}
+                {t("navbar.contact")}
               </NavLink>
             </li>
 
@@ -136,23 +136,13 @@ const Navbar = () => {
                   onClick={handleLoginSignupClick}
                   className="login-button mobile"
                 >
-                  {t("loginSignup")}
+                  {t("navbar.logins")}
                 </button>
               ) : (
-                <>
-                  <span
-                    onClick={handleProfileClick}
-                    className="login-button mobile"
-                  >
-                    {`${t("hi")}, ${userDetails.first_name}`}
-                  </span>
-                  <button
-                    onClick={handleLogout}
-                    className="logout-button mobile"
-                  >
-                    {t("logout")}
-                  </button>
-                </>
+                <span
+                  onClick={handleProfileClick}
+                  className="login-button mobile"
+                >{`${t("navbar.hi")}, ${userDetails.first_name}`}</span>
               )}
             </li>
           </ul>
@@ -164,7 +154,7 @@ const Navbar = () => {
               onClick={handleLoginSignupClick}
               className="login-button desktop"
             >
-              {t("logins")}
+              {t("navbar.logins")}
             </button>
           ) : (
             <>

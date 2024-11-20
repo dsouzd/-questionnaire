@@ -90,7 +90,7 @@ const Registration = () => {
     <>
       <div className="d-flex align-items-center justify-content-center m-5 vh-100 ">
         <div
-          className="card p-4 shadow"
+          className="card p-4 mt-5 shadow"
           style={{ maxWidth: "400px", width: "100%" }}
         >
           <div className="text-left mb-4">
@@ -101,16 +101,16 @@ const Registration = () => {
                 className="mb-2"
                 style={{ width: "10%" }}
               />
-              <span className="logo-text-log">{t("brand")}</span>
+              <span className="logo-text-log">{t("navbar.brand")}</span>
             </div>
-            <h4>{t("register_title")}</h4>
-            <p>{t("register_description")}</p>
+            <h4>{t("registration.register_title")}</h4>
+            <p>{t("registration.register_description")}</p>
           </div>
           <form onSubmit={handleSubmit}>
             <div className="form-group mb-3 position-relative">
               <input
                 type="text"
-                placeholder={t("first_name")}
+                placeholder={t("registration.first_name")}
                 name="first_name"
                 className="form-control"
                 disabled={isLoading}
@@ -136,7 +136,7 @@ const Registration = () => {
             <div className="form-group mb-3 position-relative">
               <input
                 type="text"
-                placeholder={t("last_name")}
+                placeholder={t("registration.last_name")}
                 name="last_name"
                 className="form-control"
                 disabled={isLoading}
@@ -162,7 +162,7 @@ const Registration = () => {
             <div className="form-group mb-3 position-relative">
               <input
                 type="text"
-                placeholder={t("email_placeholder")}
+                placeholder={t("registration.email_placeholder")}
                 name="email"
                 className="form-control"
                 disabled={isLoading}
@@ -187,7 +187,7 @@ const Registration = () => {
               <div className="input-group">
                 <input
                   type={showPassword ? "text" : "password"}
-                  placeholder={t("password_placeholder")}
+                  placeholder={t("registration.password_placeholder")}
                   name="password"
                   className="form-control"
                   disabled={isLoading}
@@ -222,7 +222,7 @@ const Registration = () => {
               <div className="input-group">
                 <input
                   type={showConfirmPassword ? "text" : "password"}
-                  placeholder={t("confirm_password")}
+                  placeholder={t("registration.confirm_password")}
                   name="confirmPassword"
                   className="form-control"
                   disabled={isLoading}
@@ -266,19 +266,18 @@ const Registration = () => {
           </form>
 
           <p className="text-center mt-1">
-            {t("already_have_account")}{" "}
+            {t("registration.already_have_account")}{" "}
             <Link
               className="register-link-text text-decoration-none"
               to="/login"
             >
-              {t("login")}
+              {t("registration.login")}
             </Link>
           </p>
           <p className="or">or</p>
 
           <div className="socials">
-            
-            <GoogleLogin/>
+            <GoogleLogin />
 
             {/* <button className="facebook-btn">
               <FontAwesomeIcon icon={faFacebookF} className="facebook-icon" />

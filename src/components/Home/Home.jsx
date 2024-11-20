@@ -27,11 +27,11 @@ const Home = () => {
     <div className="hero-section">
       <div className="hero-left">
         <h1>
-          {t("home_title")} {" "}
-          <span className="">{t("home_title2")}</span> {t("home_title3")}
+          {t("home.home_title")} {" "}
+          <span className="">{t("home.home_title2")}</span> {t("home.home_title3")}
         </h1>
-        <p>{t("home_description")}</p>
-        <button className="hero-btn">{t("home_get_started")}</button>
+        <p>{t("home.home_description")}</p>
+        <button className="hero-btn">{t("home.home_get_started")}</button>
       </div>
       <div className="hero-right">  
         <img src={exam} alt="hero-img" />

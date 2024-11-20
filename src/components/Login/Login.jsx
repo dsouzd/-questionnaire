@@ -9,7 +9,8 @@ import { db } from "../../firebase";
 import { doc, getDoc } from "firebase/firestore";
 import { useUser } from "../context/UserContext";
 import logo from "../../assets/logo.png";
-import bcrypt from 'bcryptjs'
+import bcrypt from "bcryptjs";
+import { useTranslation } from "react-i18next";
 
 const Login = () => {
   const [passwordVisible, setPasswordVisible] = useState(false);
@@ -21,6 +22,7 @@ const Login = () => {
   const [validationErrors, setValidationErrors] = useState({});
   const navigate = useNavigate();
   const { setEmail, setUserDetails } = useUser();
+  const { t } = useTranslation();
 
   const togglePasswordVisibility = () => {
     setPasswordVisible(!passwordVisible);
@@ -32,6 +34,7 @@ const Login = () => {
       [e.target.name]: e.target.value,
     });
   };
+
 
   const validateForm = () => {
     const errors = {};
@@ -82,7 +85,10 @@ const Login = () => {
       }
 
       // Password validation
-      const isPasswordValid = await bcrypt.compare(formData.password, userData.password);
+      const isPasswordValid = await bcrypt.compare(
+        formData.password,
+        userData.password
+      );
       if (!isPasswordValid) {
         toast.error("Incorrect password. Please try again.");
         setIsLoading(false);
@@ -95,35 +101,46 @@ const Login = () => {
       localStorage.setItem("userDetails", JSON.stringify(userData));
 
       toast.success("Successfully logged in!", { autoClose: 2000 });
-      setTimeout(() => navigate("/exam"), 2000);
+      setTimeout(() => navigate("/"), 2000);
     } catch (err) {
-      console.error("Error logging in:", err);
-      toast.error("An unexpected error occurred. Please try again.");
-    } finally {
+      let errorMessage = "An unexpected error occured";
+      if ((err.code = "auth/invalid-email")) {
+        errorMessage = "Please enter valid email address";
+      } else if (err.code === "auth/wrong-password") {
+        errorMessage = "Invalid password";
+      } else if (err.code === "auth/user-not-found") {
+        errorMessage = "User not found";
+      }
+      setError(errorMessage);
       setIsLoading(false);
     }
   };
 
   return (
-    <div className="d-flex justify-content-center align-items-center vh-100 bg-light">
+    <div className="d-flex justify-content-center ">
       <div
-        className="card p-4 shadow-sm"
+        className="card p-4 mt-5 shadow-sm"
         style={{ maxWidth: "400px", width: "100%" }}
       >
-        <div className="text-center mb-4">
-          <img src={logo} alt="Logo" className="mb-3" style={{ width: "80px" }} />
-          <h4>Login</h4>
+        <div className="text-left mb-1">
+          <img
+            src={logo}
+            alt="Logo"
+            className="mb-2"
+            style={{ width: "10%" }}
+          />
+          <span className="log-logo">{t("navbar.brand")}</span>
+          <h4>{t("login.login_title")}</h4>
         </div>
         <form onSubmit={handleSubmit}>
-          {/* Email Field */}
-          <div className="form-group mb-3">
-            <label htmlFor="email">Email</label>
+          <div className="form-group mb-3 position-relative">
+            <label htmlFor="email">{t("login.email_label")}</label>
             <input
               type="text"
               id="email"
               name="email"
-              className="form-control mt-1"
-              placeholder="Enter your email"
+              className="form-control mt-2"
+              placeholder={t("registration.email_placeholder")}
               value={formData.email}
               onChange={handleChange}
               disabled={isLoading}
@@ -132,17 +149,15 @@ const Login = () => {
               <p className="text-danger mt-1">{validationErrors.email}</p>
             )}
           </div>
-
-          {/* Password Field */}
-          <div className="form-group mb-3">
-            <label htmlFor="password">Password</label>
+          <div className="form-group mb-3 position-relative">
+            <label htmlFor="password">{t("login.password_label")}</label>
             <div className="input-group">
               <input
                 type={passwordVisible ? "text" : "password"}
                 id="password"
                 name="password"
-                className="form-control"
-                placeholder="Enter your password"
+                className="form-control mt-1"
+                placeholder={t("registration.password_placeholder")}
                 value={formData.password}
                 onChange={handleChange}
                 disabled={isLoading}
@@ -173,15 +188,18 @@ const Login = () => {
               fontWeight: "bold",
             }}
           >
-            {isLoading ? "Logging in..." : "Login"}
+            {isLoading ? t("login.logging_in") : t("login.login")}
           </button>
 
           {/* Register Link */}
           <div className="text-center mt-3">
             <p>
-              Don't have an account?{" "}
-              <Link to="/registration" className="text-decoration-none">
-                Register
+              {t("login.login_desc")}{" "}
+              <Link
+                to="/registration"
+                className="register-link text-decoration-none"
+              >
+                {t("login.register")}
               </Link>
             </p>
           </div>
