@@ -6,7 +6,7 @@ import { FaEye, FaEyeSlash } from "react-icons/fa";
 import "../../assets/Login.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { db } from "../../firebase";
-import { doc, getDoc, query, where } from "firebase/firestore";
+import { collection, doc, getDoc, getDocs, query, where } from "firebase/firestore";
 import { useUser } from "../context/UserContext";
 import logo from "../../assets/logo.png";
 import bcrypt from "bcryptjs";
@@ -66,40 +66,38 @@ const Login = () => {
     setIsLoading(true);
 
     try {
-      // Fetch user data from Firestore
-      const userRef = doc(db, "users");
-      const query = query(userRef, where("email", "==", formData.email));
-      const userDoc = await getDoc(userRef);
-      console.log(userDoc)
+      const userRef = collection(db, "users");
+      const q = query(userRef, where("email", "==", formData.email));
+      const querySnapshot = await getDocs(q);
 
-      if (!userDoc.exists()) {
+      if (querySnapshot.empty) {
         toast.error("No account found with this email.");
         setIsLoading(false);
         return;
       }
 
-      const usersss = userDoc.docs[0];
-      const userData = usersss.data;
+      const userData = querySnapshot.docs[0].data();
 
-      // Check if the user registered with Google
       if (userData.registeredWithGoogle) {
         toast.error("You cannot log in with a password for a Google account.");
         setIsLoading(false);
         return;
       }
 
-      // Password validation
+      console.log("Stored password:", userData.password);
+      console.log("Entered password:", formData.password);
+
       const isPasswordValid = await bcrypt.compare(
         formData.password,
         userData.password
       );
+
       if (!isPasswordValid) {
         toast.error("Incorrect password. Please try again.");
         setIsLoading(false);
         return;
       }
 
-      // Set user details and navigate to home
       setEmail(formData.email);
       setUserDetails(userData);
       localStorage.setItem("userDetails", JSON.stringify(userData));
@@ -107,18 +105,20 @@ const Login = () => {
       toast.success("Successfully logged in!", { autoClose: 2000 });
       setTimeout(() => navigate("/"), 2000);
     } catch (err) {
-      let errorMessage = "An unexpected error occured";
-      if ((err.code = "auth/invalid-email")) {
-        errorMessage = "Please enter valid email address";
+      let errorMessage = "An unexpected error occurred";
+      if (err.code === "auth/invalid-email") {
+        errorMessage = "Please enter a valid email address";
       } else if (err.code === "auth/wrong-password") {
         errorMessage = "Invalid password";
       } else if (err.code === "auth/user-not-found") {
         errorMessage = "User not found";
       }
+      console.error(errorMessage, err);
       setError(errorMessage);
       setIsLoading(false);
     }
   };
+
 
   return (
     <div className="d-flex justify-content-center ">
