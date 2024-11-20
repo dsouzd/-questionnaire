@@ -14,44 +14,6 @@ const Navbar = () => {
   const { t, i18n } = useTranslation();
   const { userDetails, logout } = useUser();
 
-  useGSAP(() => {
-    gsap.from(".logo", {
-      opacity: 0,
-      duration: 1,
-      delay: 0.5,
-      y: -50,
-    });
-    gsap.from(".nav-links li", {
-      opacity: 0,
-      duration: 1,
-      delay: 0.5,
-      y: -50,
-      stagger: 0.2,
-      ease: "back.inOut",
-    });
-    gsap.from(".login-button", {
-      opacity: 0,
-      duration: 1,
-      delay: 0.5,
-      y: -50,
-      ease: "back.inOut",
-    });
-    gsap.from(".menu-toggle", {
-      opacity: 0,
-      duration: 0.7,
-      delay: 0.5,
-      y: -50,
-      ease: "back.inOut",
-    });
-    gsap.from("select", {
-      opacity: 0,
-      duration: 1,
-      delay: 0.5,
-      y: -50,
-      ease: "back.inOut",
-    });
-  });
-
   const toggleMenu = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
   };
@@ -66,12 +28,12 @@ const Navbar = () => {
 
   const handleLogout = () => {
     logout();
+    setIsMobileMenuOpen(false);
   };
 
   const handleLanguageChange = (e) => {
     const selectedLanguage = e.target.value;
     i18n.changeLanguage(selectedLanguage);
-    console.log(selectedLanguage);
   };
 
   return (
@@ -139,10 +101,20 @@ const Navbar = () => {
                   {t("navbar.logins")}
                 </button>
               ) : (
-                <span
-                  onClick={handleProfileClick}
-                  className="login-button mobile"
-                >{`${t("navbar.hi")}, ${userDetails.first_name}`}</span>
+                <div className="logged-in-buttons">
+                  <span
+                    onClick={handleProfileClick}
+                    className="login-button mobile"
+                  >
+                    {`${t("navbar.hi")}, ${userDetails.first_name}`}
+                  </span>
+                  <button
+                    onClick={handleLogout}
+                    className="logout-button mobile"
+                  >
+                    {t("navbar.logout")}
+                  </button>
+                </div>
               )}
             </li>
           </ul>
@@ -158,43 +130,14 @@ const Navbar = () => {
             </button>
           ) : (
             <>
-              {/* User Greeting Button */}
               <button
                 className="profile-badge desktop"
                 onClick={handleProfileClick}
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  backgroundColor: "#f0f0f0",
-                  color: "#333",
-                  fontWeight: "bold",
-                  borderRadius: "20px",
-                  padding: "10px 15px",
-                  border: "1px solid #ccc",
-                  cursor: "pointer",
-                  transition: "background-color 0.3s ease",
-                }}
               >
                 <span>{`${t("hi")}, ${userDetails.first_name}`}</span>
               </button>
-
-              {/* Logout Button */}
-              <button
-                className="logout-button desktop"
-                onClick={logout}
-                style={{
-                  backgroundColor: "#8b0000",
-                  color: "#fff",
-                  fontWeight: "bold",
-                  padding: "10px 20px",
-                  borderRadius: "8px",
-                  border: "none",
-                  marginLeft: "15px",
-                  cursor: "pointer",
-                  transition: "background-color 0.3s ease",
-                }}
-              >
-                {t("logout")}
+              <button className="logout-button desktop" onClick={handleLogout}>
+                {t("navbar.logout")}
               </button>
             </>
           )}

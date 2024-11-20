@@ -1,10 +1,12 @@
 .register-link-text {
   color: #8b0000;
 }
+
 .logo-info {
   display: flex;
   gap: 5px;
 }
+
 .logo-text-log{
     margin-top: 5px;
     font-weight: 500;
@@ -25,9 +27,9 @@
 
 .sign-in-button {
   background-color: white;
-  color: #4285F4;
+  color: #8b0000;
   font-size: 14px;
-  border: 1px solid #4285F4; 
+  border: 1px solid #8b0000; 
   padding: 8px 16px; 
   display: inline-flex;
   align-items: center;
@@ -39,7 +41,7 @@
 }
 
 .sign-in-button:hover {
-  background-color: #4285F4CC; 
+  background-color: #8b0000; 
   color: white;
 }
 

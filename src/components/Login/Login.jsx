@@ -6,7 +6,7 @@ import { FaEye, FaEyeSlash } from "react-icons/fa";
 import "../../assets/Login.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { db } from "../../firebase";
-import { doc, getDoc } from "firebase/firestore";
+import { doc, getDoc, query, where } from "firebase/firestore";
 import { useUser } from "../context/UserContext";
 import logo from "../../assets/logo.png";
 import bcrypt from "bcryptjs";
@@ -23,6 +23,8 @@ const Login = () => {
   const navigate = useNavigate();
   const { setEmail, setUserDetails } = useUser();
   const { t } = useTranslation();
+  const [error, setError] = useState();
+  
 
   const togglePasswordVisibility = () => {
     setPasswordVisible(!passwordVisible);
@@ -34,7 +36,6 @@ const Login = () => {
       [e.target.name]: e.target.value,
     });
   };
-
 
   const validateForm = () => {
     const errors = {};
@@ -66,8 +67,10 @@ const Login = () => {
 
     try {
       // Fetch user data from Firestore
-      const userRef = doc(db, "users", formData.email);
+      const userRef = doc(db, "users");
+      const query = query(userRef, where("email", "==", formData.email));
       const userDoc = await getDoc(userRef);
+      console.log(userDoc)
 
       if (!userDoc.exists()) {
         toast.error("No account found with this email.");
@@ -75,7 +78,8 @@ const Login = () => {
         return;
       }
 
-      const userData = userDoc.data();
+      const usersss = userDoc.docs[0];
+      const userData = usersss.data;
 
       // Check if the user registered with Google
       if (userData.registeredWithGoogle) {
