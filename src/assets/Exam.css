@@ -1,0 +1,279 @@
+.exam-container {
+  font-family: Arial, sans-serif;
+  margin: 40px auto;
+  max-width: 900px;
+  padding: 20px;
+  border-radius: 8px;
+  background-color: #ffffff;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  position: relative;
+}
+
+.exam-complete {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 200px auto;
+}
+
+.exam-complete h2 {
+  color: #8b0000;
+}
+
+.exam-container h2 {
+  font-size: 24px;
+  font-weight: 600;
+  margin-bottom: 20px;
+  color: #333;
+  text-align: center;
+}
+
+.exam-nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.language-select {
+  padding: 10px;
+  border-radius: 8px;
+  border: 2px solid #ccc;
+  font-size: 14px;
+  background-color: #f4f4f4;
+  margin-bottom: 20px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.language-select:focus {
+  border-color: #8b0000;
+  background-color: #e7f3ff;
+}
+
+.timer {
+  font-size: 18px;
+  font-weight: bold;
+  color: #333;
+}
+
+.question {
+  margin-bottom: 30px;
+}
+
+.question p {
+  font-size: 18px;
+  font-weight: 500;
+  color: #333;
+  margin-bottom: 12px;
+}
+
+ul {
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+ul li {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+  font-size: 16px;
+  color: #333;
+}
+
+input[type="radio"] {
+  margin-right: 10px;
+  accent-color: #8b0000;
+  width: 18px;
+  height: 18px;
+}
+
+input[type="radio"]:checked {
+  background-color: #8b0000;
+}
+
+.submit {
+  background-color: #8b0000;
+  color: white;
+  font-size: 16px;
+  font-weight: 500;
+  padding: 12px 20px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  width: 100%;
+  transition: background-color 0.3s ease;
+}
+
+.submit:hover {
+  background-color: #5d1111;
+}
+
+.submit:active {
+  background-color: #8b0000;
+}
+
+.next,.prev{
+    border: none;
+}
+
+.nav-buttons {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+.nav-buttons button {
+  width: auto;
+  font-size: 14px;
+  padding: 8px 12px;
+  background-color: #8b0000;
+  color: white;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.nav-buttons button:hover {
+  background-color: #5d1111;
+}
+
+.nav-buttons button:active {
+  background-color: #8b0000;
+}
+
+.nav-buttons button:disabled {
+  background-color: #e0e0e0;
+  cursor: not-allowed;
+}
+
+@media (max-width: 1024px) {
+  .exam-container {
+    padding: 15px;
+  }
+
+  .question p {
+    font-size: 16px;
+  }
+
+  .nav-buttons {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .nav-buttons button {
+    width: 100%;
+  }
+
+  .language-select {
+    font-size: 16px;
+  }
+
+  .timer {
+    font-size: 16px;
+  }
+
+  input[type="radio"] {
+    width: 16px;
+    height: 16px;
+  }
+
+  ul li {
+    font-size: 14px;
+  }
+
+  .submit {
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 768px) {
+  .exam-container {
+    padding: 10px;
+  }
+
+  .exam-nav {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .language-select {
+    font-size: 14px;
+    width: 100%;
+  }
+
+  .timer {
+    font-size: 14px;
+    margin-top: 10px;
+  }
+
+  .question p {
+    font-size: 14px;
+  }
+
+  ul li {
+    font-size: 14px;
+  }
+
+  .submit {
+    font-size: 14px;
+    padding: 10px 15px;
+  }
+
+  .nav-buttons button {
+    width: 100%;
+    font-size: 14px;
+    padding: 8px 12px;
+  }
+
+  .nav-buttons {
+    gap: 10px;
+  }
+}
+
+@media (max-width: 480px) {
+  .exam-container {
+    padding: 8px;
+  }
+
+  .exam-nav {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .language-select {
+    font-size: 12px;
+    width: 100%;
+    margin-bottom: 15px;
+  }
+
+  .timer {
+    font-size: 14px;
+    margin-top: 5px;
+  }
+
+  .question p {
+    font-size: 14px;
+  }
+
+  ul li {
+    font-size: 14px;
+  }
+
+  .submit {
+    font-size: 14px;
+    padding: 10px;
+  }
+
+  .nav-buttons button {
+    width: 100%;
+    font-size: 14px;
+    padding: 8px 12px;
+  }
+
+  .nav-buttons {
+    gap: 10px;
+  }
+}

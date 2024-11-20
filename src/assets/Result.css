@@ -1,0 +1,9 @@
+.result-container {
+  display: flex;
+}
+
+.result-content {
+  margin: 100px auto;
+  text-align: center;
+  padding: 20px;
+}

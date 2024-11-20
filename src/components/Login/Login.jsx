@@ -68,13 +68,11 @@ const Login = () => {
       }
       setIsLoading(false);
 
-      // Display success notification
       toast.success("Account successfully logged in!", {
         position: "top-center",
         autoClose: 2000,
       });
 
-      // Redirect to home page after a short delay
       setTimeout(() => {
         navigate("/");
       }, 2500);
@@ -101,18 +99,18 @@ const Login = () => {
             className="mb-2"
             style={{ width: "10%" }}
           />
-          <span className="log-logo">{t("brand")}</span>
-          <h4>{t("login_title")}</h4>
+          <span className="log-logo">{t("navbar.brand")}</span>
+          <h4>{t("login.login_title")}</h4>
         </div>
         <form onSubmit={handleSubmit}>
           <div className="form-group mb-3 position-relative">
-            <label htmlFor="email">{t("email_label")}</label>
+            <label htmlFor="email">{t("login.email_label")}</label>
             <input
               type="text"
               id="email"
               name="email"
               className="form-control mt-2"
-              placeholder={t("email_placeholder")}
+              placeholder={t("registration.email_placeholder")}
               value={formData.email}
               onChange={handleChange}
               disabled={isLoading}
@@ -133,14 +131,14 @@ const Login = () => {
             )}
           </div>
           <div className="form-group mb-3 position-relative">
-            <label htmlFor="password">{t("password_label")}</label>
+            <label htmlFor="password">{t("login.password_label")}</label>
             <div className="input-group">
               <input
                 type={passwordVisible ? "text" : "password"}
                 id="password"
                 name="password"
                 className="form-control mt-1"
-                placeholder={t("password_placeholder")}
+                placeholder={t("registration.password_placeholder")}
                 value={formData.password}
                 onChange={handleChange}
                 disabled={isLoading}
@@ -178,17 +176,17 @@ const Login = () => {
             className="custom-login-btn w-100 mt-3"
             style={{ backgroundColor: "#8B0000", color: "#fff" }}
           >
-            {isLoading ? t("logging_in") : t("login")}
+            {isLoading ? t("login.logging_in") : t("login.login")}
           </button>
 
           <div className="text-center mt-3">
             <p>
-              {t("login_desc")}{" "}
+              {t("login.login_desc")}{" "}
               <Link
                 to="/registration"
                 className="register-link text-decoration-none"
               >
-                {t("register")}
+                {t("login.register")}
               </Link>
             </p>
           </div>

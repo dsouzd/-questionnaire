@@ -76,7 +76,7 @@ const Navbar = () => {
         <div className="brand">
           <Link to="/" className="logo">
             <img src={logo} className="logo-img" alt="logo" />
-            <span className="logo-text">{t("brand")}</span>
+            <span className="logo-text">{t("navbar.brand")}</span>
           </Link>
         </div>
 
@@ -92,7 +92,7 @@ const Navbar = () => {
                   isActive ? "nav-link nav-link-active" : "nav-link"
                 }
               >
-                {t("home")}
+                {t("navbar.home")}
               </NavLink>
             </li>
             <li>
@@ -102,7 +102,7 @@ const Navbar = () => {
                   isActive ? "nav-link nav-link-active" : "nav-link"
                 }
               >
-                {t("about")}
+                {t("navbar.about")}
               </NavLink>
             </li>
             <li>
@@ -112,7 +112,7 @@ const Navbar = () => {
                   isActive ? "nav-link nav-link-active" : "nav-link"
                 }
               >
-                {t("exam")}
+                {t("navbar.exam")}
               </NavLink>
             </li>
             <li>
@@ -122,7 +122,7 @@ const Navbar = () => {
                   isActive ? "nav-link nav-link-active" : "nav-link"
                 }
               >
-                {t("contact")}
+                {t("navbar.contact")}
               </NavLink>
             </li>
             <li className="mobile-login">
@@ -131,13 +131,13 @@ const Navbar = () => {
                   onClick={handleLoginSignupClick}
                   className="login-button mobile"
                 >
-                  {t("loginSignup")}
+                  {t("navbar.logins")}
                 </button>
               ) : (
                 <span
                   onClick={handleProfileClick}
                   className="login-button mobile"
-                >{`${t("hi")}, ${userDetails.first_name}`}</span>
+                >{`${t("navbar.hi")}, ${userDetails.first_name}`}</span>
               )}
             </li>
           </ul>
@@ -149,11 +149,11 @@ const Navbar = () => {
               onClick={handleLoginSignupClick}
               className="login-button desktop"
             >
-              {t("logins")}
+              {t("navbar.logins")}
             </button>
           ) : (
             <span onClick={handleProfileClick} className="login-button desktop">
-              {`${t("hi")}, ${userDetails.first_name}`}
+              {`${t("navbar.hi")}, ${userDetails.first_name}`}
             </span>
           )}
         </div>
