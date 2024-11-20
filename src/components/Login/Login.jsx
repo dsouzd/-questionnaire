@@ -9,7 +9,8 @@ import { db } from "../../firebase";
 import { doc, getDoc } from "firebase/firestore";
 import { useUser } from "../context/UserContext";
 import logo from "../../assets/logo.png";
-import bcrypt from 'bcryptjs'
+import bcrypt from "bcryptjs";
+import { useTranslation } from "react-i18next";
 
 const Login = () => {
   const [passwordVisible, setPasswordVisible] = useState(false);
@@ -21,6 +22,7 @@ const Login = () => {
   const [validationErrors, setValidationErrors] = useState({});
   const navigate = useNavigate();
   const { setEmail, setUserDetails } = useUser();
+  const { t } = useTranslation();
 
   const togglePasswordVisibility = () => {
     setPasswordVisible(!passwordVisible);
@@ -32,6 +34,7 @@ const Login = () => {
       [e.target.name]: e.target.value,
     });
   };
+
 
   const validateForm = () => {
     const errors = {};
@@ -82,7 +85,10 @@ const Login = () => {
       }
 
       // Password validation
-      const isPasswordValid = await bcrypt.compare(formData.password, userData.password);
+      const isPasswordValid = await bcrypt.compare(
+        formData.password,
+        userData.password
+      );
       if (!isPasswordValid) {
         toast.error("Incorrect password. Please try again.");
         setIsLoading(false);
@@ -95,7 +101,7 @@ const Login = () => {
       localStorage.setItem("userDetails", JSON.stringify(userData));
 
       toast.success("Successfully logged in!", { autoClose: 2000 });
-      setTimeout(() => navigate("/exam"), 2000);
+      setTimeout(() => navigate("/"), 2000);
     } catch (err) {
       let errorMessage = "An unexpected error occured";
       if ((err.code = "auth/invalid-email")) {
@@ -111,14 +117,11 @@ const Login = () => {
   };
 
   return (
-    <div className="d-flex justify-content-center align-items-center vh-100 bg-light">
+    <div className="d-flex justify-content-center ">
       <div
-        className="card p-4 shadow-sm"
+        className="card p-4 mt-5 shadow-sm"
         style={{ maxWidth: "400px", width: "100%" }}
       >
-        <div className="text-center mb-4">
-          <img src={logo} alt="Logo" className="mb-3" style={{ width: "80px" }} />
-          <h4>Login</h4>
         <div className="text-left mb-1">
           <img
             src={logo}

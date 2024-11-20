@@ -8,11 +8,9 @@ import Login from "./components/Login/Login";
 import TakeExam from "./components/Exam/TakeExam";
 import Registration from "./components/Registration/Registration";
 import Profile from "./components/Profile/Profile";
-import Result from "./components/Result/Result";
 import ExamInstructions from "./components/Exam/ExamInstructions";
 import EditProfile from "./components/EditProfile/EditProfile";
 import Result from "./components/Result/Result";
-
 const App = () => {
   return (
     <>
@@ -28,7 +26,6 @@ const App = () => {
             <Route path="/profile" element={<Profile />} />
             <Route path="/result" element={<Result />} />
             <Route path="/edit-profile" element={<EditProfile />} />
-            <Route path="/result" element={<Result />} />
           </Routes>
     </>
   );

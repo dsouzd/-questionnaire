@@ -90,7 +90,7 @@ const Registration = () => {
     <>
       <div className="d-flex align-items-center justify-content-center m-5 vh-100 ">
         <div
-          className="card p-4 shadow"
+          className="card p-4 mt-5 shadow"
           style={{ maxWidth: "400px", width: "100%" }}
         >
           <div className="text-left mb-4">
