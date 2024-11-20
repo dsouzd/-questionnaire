@@ -51,7 +51,6 @@ const Login = () => {
     setIsLoading(true);
 
     try {
-
       const userCredentials = await signInWithEmailAndPassword(
         auth,
         formData.email,
@@ -77,11 +76,15 @@ const Login = () => {
         navigate("/");
       }, 2500);
     } catch (err) {
-      console.log(err);
-      setError(
-        err.response?.data?.detail ||
-          "An unexpected error occurred. Please try again."
-      );
+      let errorMessage = "An unexpected error occured";
+      if ((err.code = "auth/invalid-email")) {
+        errorMessage = "Please enter valid email address";
+      } else if (err.code === "auth/wrong-password") {
+        errorMessage = "Invalid password";
+      } else if (err.code === "auth/user-not-found") {
+        errorMessage = "User not found";
+      }
+      setError(errorMessage);
       setIsLoading(false);
     }
   };

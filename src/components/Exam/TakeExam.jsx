@@ -28,9 +28,20 @@ const TakeExam = () => {
       setExamComplete(true);
       return;
     }
+
+    const examTime = localStorage.getItem("examTime");
+    if (examTime) {
+      const savedTime = parseInt(examTime);
+      setTime(savedTime);
+    }
+
     const interval = setInterval(() => {
       if (time > 0) {
-        setTime(time - 1);
+        setTime((prevTime) => {
+          const countdown = prevTime - 1;
+          localStorage.setItem("examTime", countdown);
+          return countdown;
+        });
       } else {
         clearInterval(interval);
         setisSubmitted(true);
@@ -75,10 +86,10 @@ const TakeExam = () => {
   };
 
   const handleSubmit = async () => {
-    console.log(userDetails)
+    console.log(userDetails);
     if (!userDetails) {
       alert("Please log in to submit the exam.");
-      return
+      return;
     }
     let marks = 0;
     questions.forEach((question) => {
@@ -93,10 +104,10 @@ const TakeExam = () => {
       const userDoc = doc(db, "users", userDetails.uid);
       await updateDoc(userDoc, {
         score: marks,
-        examDate: new Date()
+        examDate: new Date(),
       });
     } catch (error) {
-      console.log(error)
+      console.log(error);
     }
 
     localStorage.setItem("examCompleted", "true");
@@ -133,7 +144,7 @@ const TakeExam = () => {
           Question {currentQuestion + 1}of {questions.length}
         </p>
         <p>{questions[currentQuestion].question}</p>
-        <ul>
+        <ul className="questions">
           {questions[currentQuestion].options.map((option) => (
             <li key={option.id}>
               <input

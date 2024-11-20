@@ -84,7 +84,7 @@ const Navbar = () => {
           className={`nav-links ${isMobileMenuOpen ? "active" : ""}`}
           id="navbar-sticky"
         >
-          <ul>
+          <ul className="nav-ul">
             <li>
               <NavLink
                 to="/"
@@ -107,7 +107,7 @@ const Navbar = () => {
             </li>
             <li>
               <NavLink
-                to="/exam"
+                to="/instructions"
                 className={({ isActive }) =>
                   isActive ? "nav-link nav-link-active" : "nav-link"
                 }
