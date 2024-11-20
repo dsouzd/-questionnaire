@@ -260,7 +260,7 @@ const Registration = () => {
                 style={{ backgroundColor: "#8B0000", color: "#fff" }}
                 disabled={isLoading}
               >
-                {isLoading ? t("registering") : t("register")}
+                {isLoading ? t("registration.registering") : t("registration.register")}
               </button>
             </div>
           </form>
