@@ -2,27 +2,22 @@ import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { FaEye, FaEyeSlash, FaTimes } from "react-icons/fa";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 import "../../assets/Login.css";
 import "bootstrap/dist/css/bootstrap.min.css";
-import axios from "axios";
-import { useTranslation } from "react-i18next";
-import logo from "../../assets/logo.png";
-import { useUser } from "../context/UserContext";
-import { validateForm } from "../../validations/formValidations";
-import { signInWithEmailAndPassword } from "firebase/auth";
-import { auth, db } from "../../firebase";
+import { db } from "../../firebase";
 import { doc, getDoc } from "firebase/firestore";
+import { useUser } from "../context/UserContext";
+import logo from "../../assets/logo.png";
+import bcrypt from 'bcryptjs'
 
 const Login = () => {
-  const { t } = useTranslation();
   const [passwordVisible, setPasswordVisible] = useState(false);
   const [formData, setFormData] = useState({
     email: "",
     password: "",
   });
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState("");
   const [validationErrors, setValidationErrors] = useState({});
   const navigate = useNavigate();
   const { setEmail, setUserDetails } = useUser();
@@ -38,157 +33,155 @@ const Login = () => {
     });
   };
 
+  const validateForm = () => {
+    const errors = {};
+    if (!formData.email.trim()) {
+      errors.email = "Email is required.";
+    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
+      errors.email = "Enter a valid email.";
+    }
+
+    if (!formData.password.trim()) {
+      errors.password = "Password is required.";
+    } else if (formData.password.length < 6) {
+      errors.password = "Password must be at least 6 characters.";
+    }
+
+    return errors;
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Form submitted");
-    setError("");
-    const errors = validateForm(formData, "login");
+    setValidationErrors({});
+    const errors = validateForm();
     if (Object.keys(errors).length > 0) {
       setValidationErrors(errors);
       return;
     }
-    setValidationErrors({});
+
     setIsLoading(true);
 
     try {
+      // Fetch user data from Firestore
+      const userRef = doc(db, "users", formData.email);
+      const userDoc = await getDoc(userRef);
 
-      const userCredentials = await signInWithEmailAndPassword(
-        auth,
-        formData.email,
-        formData.password
-      );
-      const user = userCredentials.user;
-      setEmail(formData.email);
-
-      const userDoc = await getDoc(doc(db, "users", user.uid));
-      if (userDoc.exists()) {
-        const userData = userDoc.data();
-        setUserDetails(userData);
-        localStorage.setItem("userDetails", JSON.stringify(userData));
+      if (!userDoc.exists()) {
+        toast.error("No account found with this email.");
+        setIsLoading(false);
+        return;
       }
-      setIsLoading(false);
 
-      // Display success notification
-      toast.success("Account successfully logged in!", {
-        position: "top-center",
-        autoClose: 2000,
-      });
+      const userData = userDoc.data();
 
-      // Redirect to home page after a short delay
-      setTimeout(() => {
-        navigate("/");
-      }, 2500);
+      // Check if the user registered with Google
+      if (userData.registeredWithGoogle) {
+        toast.error("You cannot log in with a password for a Google account.");
+        setIsLoading(false);
+        return;
+      }
+
+      // Password validation
+      const isPasswordValid = await bcrypt.compare(formData.password, userData.password);
+      if (!isPasswordValid) {
+        toast.error("Incorrect password. Please try again.");
+        setIsLoading(false);
+        return;
+      }
+
+      // Set user details and navigate to home
+      setEmail(formData.email);
+      setUserDetails(userData);
+      localStorage.setItem("userDetails", JSON.stringify(userData));
+
+      toast.success("Successfully logged in!", { autoClose: 2000 });
+      setTimeout(() => navigate("/exam"), 2000);
     } catch (err) {
-      console.log(err);
-      setError(
-        err.response?.data?.detail ||
-          "An unexpected error occurred. Please try again."
-      );
+      console.error("Error logging in:", err);
+      toast.error("An unexpected error occurred. Please try again.");
+    } finally {
       setIsLoading(false);
     }
   };
 
   return (
-    <div className="d-flex a justify-content-center mt-5">
+    <div className="d-flex justify-content-center align-items-center vh-100 bg-light">
       <div
-        className="card p-4 shadow"
+        className="card p-4 shadow-sm"
         style={{ maxWidth: "400px", width: "100%" }}
       >
-        <div className="text-left mb-1">
-          <img
-            src={logo}
-            alt="Logo"
-            className="mb-2"
-            style={{ width: "10%" }}
-          />
-          <span className="log-logo">{t("brand")}</span>
-          <h4>{t("login_title")}</h4>
+        <div className="text-center mb-4">
+          <img src={logo} alt="Logo" className="mb-3" style={{ width: "80px" }} />
+          <h4>Login</h4>
         </div>
         <form onSubmit={handleSubmit}>
-          <div className="form-group mb-3 position-relative">
-            <label htmlFor="email">{t("email_label")}</label>
+          {/* Email Field */}
+          <div className="form-group mb-3">
+            <label htmlFor="email">Email</label>
             <input
               type="text"
               id="email"
               name="email"
-              className="form-control mt-2"
-              placeholder={t("email_placeholder")}
+              className="form-control mt-1"
+              placeholder="Enter your email"
               value={formData.email}
               onChange={handleChange}
               disabled={isLoading}
             />
-            {isLoading && (
-              <FaTimes
-                className="position-absolute"
-                style={{
-                  top: "70%",
-                  right: "10px",
-                  transform: "translateY(-50%)",
-                  color: "#dc3545",
-                }}
-              />
-            )}
             {validationErrors.email && (
               <p className="text-danger mt-1">{validationErrors.email}</p>
             )}
           </div>
-          <div className="form-group mb-3 position-relative">
-            <label htmlFor="password">{t("password_label")}</label>
+
+          {/* Password Field */}
+          <div className="form-group mb-3">
+            <label htmlFor="password">Password</label>
             <div className="input-group">
               <input
                 type={passwordVisible ? "text" : "password"}
                 id="password"
                 name="password"
-                className="form-control mt-1"
-                placeholder={t("password_placeholder")}
+                className="form-control"
+                placeholder="Enter your password"
                 value={formData.password}
                 onChange={handleChange}
                 disabled={isLoading}
               />
               <button
                 type="button"
-                className="btn btn-outline-secondary mt-1"
+                className="btn btn-outline-secondary"
                 onClick={togglePasswordVisibility}
                 disabled={isLoading}
               >
                 {passwordVisible ? <FaEye /> : <FaEyeSlash />}
               </button>
-              {isLoading && (
-                <FaTimes
-                  className="position-absolute"
-                  style={{
-                    top: "60%",
-                    right: "44px",
-                    transform: "translateY(-50%)",
-                    color: "#dc3545",
-                  }}
-                />
-              )}
             </div>
             {validationErrors.password && (
               <p className="text-danger mt-1">{validationErrors.password}</p>
             )}
           </div>
 
-          {error && <p className="text-danger text-center mt-2">{error}</p>}
-
+          {/* Login Button */}
           <button
             type="submit"
             disabled={isLoading}
-            className="custom-login-btn w-100 mt-3"
-            style={{ backgroundColor: "#8B0000", color: "#fff" }}
+            className="btn btn-block mt-3"
+            style={{
+              backgroundColor: "#8b0000",
+              color: "#fff",
+              width: "100%",
+              fontWeight: "bold",
+            }}
           >
-            {isLoading ? t("logging_in") : t("login")}
+            {isLoading ? "Logging in..." : "Login"}
           </button>
 
+          {/* Register Link */}
           <div className="text-center mt-3">
             <p>
-              {t("login_desc")}{" "}
-              <Link
-                to="/registration"
-                className="register-link text-decoration-none"
-              >
-                {t("register")}
+              Don't have an account?{" "}
+              <Link to="/registration" className="text-decoration-none">
+                Register
               </Link>
             </p>
           </div>

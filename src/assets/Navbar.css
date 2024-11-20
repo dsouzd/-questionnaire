@@ -227,3 +227,23 @@ ul {
     border-radius: 4px;
   }
 }
+
+.logout-button {
+  background-color: #8b0000;
+  color: white;
+  font-size: 14px;
+  font-weight: 500;
+  padding: 10px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  border: none;
+  transition: background-color 0.3s ease;
+}
+
+.logout-button:hover {
+  background-color: #5d1111;
+}
+
+.mobile-login .logout-button {
+  width: 100%;
+}

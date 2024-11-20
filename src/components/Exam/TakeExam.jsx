@@ -1,9 +1,7 @@
 import React from 'react'
 
-const TakeExam = () => {
+export default function TakeExam() {
   return (
     <div>TakeExam</div>
   )
 }
-
-export default TakeExam

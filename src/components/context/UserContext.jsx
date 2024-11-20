@@ -4,7 +4,7 @@ import React, {
   useEffect,
   useState,
 } from "react";
-
+import { useNavigate } from "react-router-dom";
 export const UserContext = createContext();
 
 export const UserProvider = ({ children }) => {
@@ -12,7 +12,7 @@ export const UserProvider = ({ children }) => {
   const loggedUser = localStorage.getItem("userDetails");
   const [email, setEmail] = useState(localEmail);
   const [userDetails, setUserDetails] = useState(loggedUser?JSON.parse(loggedUser):null);
-
+  const navigate = useNavigate();
   useEffect(() => {
     if (userDetails)
       localStorage.setItem("userDetails", JSON.stringify(userDetails));
@@ -22,9 +22,18 @@ export const UserProvider = ({ children }) => {
     if (email) localStorage.setItem("email", email);
   }, [email]);
 
+  const logout = () => {
+    localStorage.removeItem('email');
+    localStorage.removeItem('userDetails');
+    localStorage.clear();
+    setEmail(null);
+    setUserDetails(null);
+    navigate('/');
+  };
+
   return (
     <UserContext.Provider
-      value={{ email, setEmail, userDetails, setUserDetails }}
+      value={{ email, setEmail, userDetails, setUserDetails , logout}}
     >
       {children}
     </UserContext.Provider>
