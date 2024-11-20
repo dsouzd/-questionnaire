@@ -12,7 +12,7 @@ const Navbar = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const navigate = useNavigate();
   const { t, i18n } = useTranslation();
-  const { userDetails } = useUser();
+  const { userDetails, logout } = useUser();
 
   useGSAP(() => {
     gsap.from(".logo", {
@@ -62,6 +62,10 @@ const Navbar = () => {
 
   const handleProfileClick = () => {
     navigate("/profile");
+  };
+
+  const handleLogout = () => {
+    logout();
   };
 
   const handleLanguageChange = (e) => {
@@ -125,6 +129,7 @@ const Navbar = () => {
                 {t("navbar.contact")}
               </NavLink>
             </li>
+
             <li className="mobile-login">
               {!userDetails ? (
                 <button
@@ -152,9 +157,46 @@ const Navbar = () => {
               {t("navbar.logins")}
             </button>
           ) : (
-            <span onClick={handleProfileClick} className="login-button desktop">
-              {`${t("navbar.hi")}, ${userDetails.first_name}`}
-            </span>
+            <>
+              {/* User Greeting Button */}
+              <button
+                className="profile-badge desktop"
+                onClick={handleProfileClick}
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  backgroundColor: "#f0f0f0",
+                  color: "#333",
+                  fontWeight: "bold",
+                  borderRadius: "20px",
+                  padding: "10px 15px",
+                  border: "1px solid #ccc",
+                  cursor: "pointer",
+                  transition: "background-color 0.3s ease",
+                }}
+              >
+                <span>{`${t("hi")}, ${userDetails.first_name}`}</span>
+              </button>
+
+              {/* Logout Button */}
+              <button
+                className="logout-button desktop"
+                onClick={logout}
+                style={{
+                  backgroundColor: "#8b0000",
+                  color: "#fff",
+                  fontWeight: "bold",
+                  padding: "10px 20px",
+                  borderRadius: "8px",
+                  border: "none",
+                  marginLeft: "15px",
+                  cursor: "pointer",
+                  transition: "background-color 0.3s ease",
+                }}
+              >
+                {t("logout")}
+              </button>
+            </>
           )}
         </div>
 
