@@ -134,7 +134,7 @@ const Navbar = () => {
                 className="profile-badge desktop"
                 onClick={handleProfileClick}
               >
-                <span>{`${t("hi")}, ${userDetails.first_name}`}</span>
+                <span>{`${t("navbar.hi")}, ${userDetails.first_name}`}</span>
               </button>
               <button className="logout-button desktop" onClick={handleLogout}>
                 {t("navbar.logout")}
