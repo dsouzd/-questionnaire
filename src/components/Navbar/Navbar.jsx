@@ -1,38 +1,77 @@
 import React, { useState } from "react";
 import { FaBars, FaTimes } from "react-icons/fa";
 import { Link, NavLink, useNavigate } from "react-router-dom";
-import { Modal, Button } from "react-bootstrap";
-import { useTranslation } from "react-i18next";
 import logo from "../../assets/logo.png";
 import "../../assets/Navbar.css";
+import { useGSAP } from "@gsap/react";
+import gsap from "gsap";
+import { useTranslation } from "react-i18next";
+import { useUser } from "../context/UserContext";
 
 const Navbar = () => {
-  const email = sessionStorage.getItem("email");
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [showLogoutModal, setShowLogoutModal] = useState(false);
   const navigate = useNavigate();
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+  const { userDetails, logout } = useUser();
+
+  useGSAP(() => {
+    gsap.from(".logo", {
+      opacity: 0,
+      duration: 1,
+      delay: 0.5,
+      y: -50,
+    });
+    gsap.from(".nav-links li", {
+      opacity: 0,
+      duration: 1,
+      delay: 0.5,
+      y: -50,
+      stagger: 0.2,
+      ease: "back.inOut",
+    });
+    gsap.from(".login-button", {
+      opacity: 0,
+      duration: 1,
+      delay: 0.5,
+      y: -50,
+      ease: "back.inOut",
+    });
+    gsap.from(".menu-toggle", {
+      opacity: 0,
+      duration: 0.7,
+      delay: 0.5,
+      y: -50,
+      ease: "back.inOut",
+    });
+    gsap.from("select", {
+      opacity: 0,
+      duration: 1,
+      delay: 0.5,
+      y: -50,
+      ease: "back.inOut",
+    });
+  });
 
   const toggleMenu = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
   };
 
   const handleLoginSignupClick = () => {
-    navigate("/register");
+    navigate("/registration");
+  };
+
+  const handleProfileClick = () => {
+    navigate("/profile");
   };
 
   const handleLogout = () => {
-    sessionStorage.clear();
-    navigate("/");
-    setShowLogoutModal(false); // Redirect to login page after logout
+    logout();
   };
 
-  const handleLogoutClick = () => {
-    setShowLogoutModal(true); // Show the logout confirmation modal
-  };
-
-  const handleCloseModal = () => {
-    setShowLogoutModal(false); // Close the modal without logging out
+  const handleLanguageChange = (e) => {
+    const selectedLanguage = e.target.value;
+    i18n.changeLanguage(selectedLanguage);
+    console.log(selectedLanguage);
   };
 
   return (
@@ -40,95 +79,150 @@ const Navbar = () => {
       <div className="container">
         <div className="brand">
           <Link to="/" className="logo">
-            <img src={logo} className="logo-img" alt="Logo" />
-            <span className="logo-text">{t("navbar.brand")}</span>
+            <img src={logo} className="logo-img" alt="logo" />
+            <span className="logo-text">{t("brand")}</span>
           </Link>
         </div>
 
-        {/* Mobile Menu Links */}
-        <div className={`nav-links ${isMobileMenuOpen ? "active" : ""}`} id="navbar-sticky">
+        <div
+          className={`nav-links ${isMobileMenuOpen ? "active" : ""}`}
+          id="navbar-sticky"
+        >
           <ul>
             <li>
-              <NavLink to="/" className={({ isActive }) => (isActive ? "nav-link active" : "nav-link")}>
-                {t("navbar.home")}
+              <NavLink
+                to="/"
+                className={({ isActive }) =>
+                  isActive ? "nav-link nav-link-active" : "nav-link"
+                }
+              >
+                {t("home")}
               </NavLink>
             </li>
             <li>
-              <NavLink to="/about" className={({ isActive }) => (isActive ? "nav-link active" : "nav-link")}>
-                {t("navbar.about")}
+              <NavLink
+                to="/about"
+                className={({ isActive }) =>
+                  isActive ? "nav-link nav-link-active" : "nav-link"
+                }
+              >
+                {t("about")}
               </NavLink>
             </li>
             <li>
-              <NavLink to="/exam" className={({ isActive }) => (isActive ? "nav-link active" : "nav-link")}>
-                {t("navbar.takeExam")}
+              <NavLink
+                to="/exam"
+                className={({ isActive }) =>
+                  isActive ? "nav-link nav-link-active" : "nav-link"
+                }
+              >
+                {t("exam")}
               </NavLink>
             </li>
             <li>
-              <NavLink to="/contact" className={({ isActive }) => (isActive ? "nav-link active" : "nav-link")}>
-                {t("navbar.contact")}
-              </NavLink>
-            </li>
-            <li>
-              <NavLink to="/profile" className={({ isActive }) => (isActive ? "nav-link active" : "nav-link")}>
-                {t("navbar.profile")}
+              <NavLink
+                to="/contact"
+                className={({ isActive }) =>
+                  isActive ? "nav-link nav-link-active" : "nav-link"
+                }
+              >
+                {t("contact")}
               </NavLink>
             </li>
 
-            {/* Show Login/Signup or Email & Logout based on login status in Mobile view */}
-            {email ? (
-              <li className="mobile-login">
-                <span className="user-email">{email}</span>
-                <button onClick={handleLogoutClick} className="login-button">
-                  {t("navbar.logout")}
+            <li className="mobile-login">
+              {!userDetails ? (
+                <button
+                  onClick={handleLoginSignupClick}
+                  className="login-button mobile"
+                >
+                  {t("loginSignup")}
                 </button>
-              </li>
-            ) : (
-              <li className="mobile-login">
-                <button onClick={handleLoginSignupClick} className="login-button mobile">
-                  {t("navbar.loginSignup")}
-                </button>
-              </li>
-            )}
+              ) : (
+                <>
+                  <span
+                    onClick={handleProfileClick}
+                    className="login-button mobile"
+                  >
+                    {`${t("hi")}, ${userDetails.first_name}`}
+                  </span>
+                  <button
+                    onClick={handleLogout}
+                    className="logout-button mobile"
+                  >
+                    {t("logout")}
+                  </button>
+                </>
+              )}
+            </li>
           </ul>
         </div>
 
-        {/* Desktop Email and Logout Button */}
         <div className="button-group">
-          {email ? (
+          {!userDetails ? (
+            <button
+              onClick={handleLoginSignupClick}
+              className="login-button desktop"
+            >
+              {t("logins")}
+            </button>
+          ) : (
             <>
-              <span className="user-email">{email}</span>
-              <button onClick={handleLogoutClick} className="login-button desktop">
-                {t("navbar.logout")}
+              {/* User Greeting Button */}
+              <button
+                className="profile-badge desktop"
+                onClick={handleProfileClick}
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  backgroundColor: "#f0f0f0",
+                  color: "#333",
+                  fontWeight: "bold",
+                  borderRadius: "20px",
+                  padding: "10px 15px",
+                  border: "1px solid #ccc",
+                  cursor: "pointer",
+                  transition: "background-color 0.3s ease",
+                }}
+              >
+                <span>{`${t("hi")}, ${userDetails.first_name}`}</span>
+              </button>
+
+              {/* Logout Button */}
+              <button
+                className="logout-button desktop"
+                onClick={logout}
+                style={{
+                  backgroundColor: "#8b0000",
+                  color: "#fff",
+                  fontWeight: "bold",
+                  padding: "10px 20px",
+                  borderRadius: "8px",
+                  border: "none",
+                  marginLeft: "15px",
+                  cursor: "pointer",
+                  transition: "background-color 0.3s ease",
+                }}
+              >
+                {t("logout")}
               </button>
             </>
-          ) : (
-            <button onClick={handleLoginSignupClick} className="login-button desktop">
-              {t("navbar.loginSignup")}
-            </button>
           )}
         </div>
 
-        {/* Menu toggle button for mobile */}
-        <button onClick={toggleMenu} className="menu-toggle" aria-label="Toggle menu">
-          {isMobileMenuOpen ? <FaTimes className="menu-icon close-icon" /> : <FaBars className="menu-icon hamburger-icon" />}
+        <select onChange={handleLanguageChange} value={i18n.language}>
+          <option value="en">En</option>
+          <option value="de">De</option>
+        </select>
+
+        <button onClick={toggleMenu} className="menu-toggle">
+          {isMobileMenuOpen ? (
+            <FaTimes className="menu-icon close-icon" />
+          ) : (
+            <FaBars className="menu-icon hamburger-icon" />
+          )}
         </button>
       </div>
-
-      {/* Logout Confirmation Modal */}
-      <Modal show={showLogoutModal} onHide={handleCloseModal} centered>
-        <Modal.Header closeButton>
-          <Modal.Title>{t("navbar.logoutConfirmTitle")}</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>{t("navbar.logoutConfirmMessage")}</Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={handleCloseModal}>
-            {t("navbar.logoutCancel")}
-          </Button>
-          <Button variant="danger" style={{ backgroundColor: "#8b0000" }} onClick={handleLogout}>
-            {t("navbar.logoutConfirm")}
-          </Button>
-        </Modal.Footer>
-      </Modal>
     </nav>
   );
 };
