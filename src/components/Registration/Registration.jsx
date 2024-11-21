@@ -1,8 +1,8 @@
 import { doc } from "firebase/firestore";
 import React, { useState } from "react";
 import { FaEye, FaEyeSlash, FaTimes } from "react-icons/fa";
-import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
+import bcrypt from "bcryptjs";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { validateForm } from "../../validations/formValidations";
@@ -46,6 +46,8 @@ const Registration = () => {
     setIsLoading(true);
 
     try {
+      const hashedPassword = await bcrypt.hash(formData.password, 8);
+
       const userCredentials = await createUserWithEmailAndPassword(
         auth,
         formData.email,
@@ -59,6 +61,7 @@ const Registration = () => {
         first_name: formData.first_name,
         last_name: formData.last_name,
         email: formData.email,
+        password: hashedPassword,
         createdAt: new Date(),
       });
 
@@ -260,7 +263,9 @@ const Registration = () => {
                 style={{ backgroundColor: "#8B0000", color: "#fff" }}
                 disabled={isLoading}
               >
-                {isLoading ? t("registration.registering") : t("registration.register")}
+                {isLoading
+                  ? t("registration.registering")
+                  : t("registration.register")}
               </button>
             </div>
           </form>

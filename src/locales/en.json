@@ -29,7 +29,8 @@
     "already_have_account": "Already have an account?",
     "login": "Login",
     "login_desc": "Don't have an account?",
-    "success_register": "Account successfully created!"
+    "success_register": "Account successfully created!",
+    "wrong_password":"Incorrect password. Please try again."
   },
   "login": {
     "login_title": "Login into your Account",
@@ -43,6 +44,7 @@
     "error_invalid_email": "Please enter a valid email address.",
     "error_password_length": "Password must be at least 8 characters long.",
     "error": "Error",
-    "success_login": "Account successfully logged in!"
+    "success_login": "Account successfully logged in!",
+    "error_no_account":"No account found with this email"
   }
 }
