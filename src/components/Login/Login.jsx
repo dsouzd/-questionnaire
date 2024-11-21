@@ -6,7 +6,14 @@ import { FaEye, FaEyeSlash } from "react-icons/fa";
 import "../../assets/Login.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { db } from "../../firebase";
-import { collection, doc, getDoc, getDocs, query, where } from "firebase/firestore";
+import {
+  collection,
+  doc,
+  getDoc,
+  getDocs,
+  query,
+  where,
+} from "firebase/firestore";
 import { useUser } from "../context/UserContext";
 import logo from "../../assets/logo.png";
 import bcrypt from "bcryptjs";
@@ -24,7 +31,6 @@ const Login = () => {
   const { setEmail, setUserDetails } = useUser();
   const { t } = useTranslation();
   const [error, setError] = useState();
-  
 
   const togglePasswordVisibility = () => {
     setPasswordVisible(!passwordVisible);
@@ -66,34 +72,42 @@ const Login = () => {
     setIsLoading(true);
 
     try {
-      const userRef = collection(db, "users");
-      const q = query(userRef, where("email", "==", formData.email));
+      const q = query(
+        collection(db, "users"),
+        where("email", "==", formData.email)
+      );
       const querySnapshot = await getDocs(q);
 
       if (querySnapshot.empty) {
-        toast.error("No account found with this email.");
+        toast.error(t("login.error_no_account"), {
+          position: "top-center",
+          autoClose: 2000,
+        });
         setIsLoading(false);
         return;
       }
 
       const userData = querySnapshot.docs[0].data();
+      const password = await bcrypt.compare(
+        formData.password,
+        userData.password
+      );
+      const email = await bcrypt.compare(formData.email, userData.email);
 
-      if (userData.registeredWithGoogle) {
-        toast.error("You cannot log in with a password for a Google account.");
+      if(!email){
+        toast.error(t("login.error_no_account"), {
+          position: "top-center",
+          autoClose: 2000,
+        });
         setIsLoading(false);
         return;
       }
 
-      console.log("Stored password:", userData.password);
-      console.log("Entered password:", formData.password);
-
-      const isPasswordValid = await bcrypt.compare(
-        formData.password,
-        userData.password
-      );
-
-      if (!isPasswordValid) {
-        toast.error("Incorrect password. Please try again.");
+      if (!password) {
+        toast.error(t("login.wrong_password"), {
+          position: "top-center",
+          autoClose: 2000,
+        });
         setIsLoading(false);
         return;
       }
@@ -104,21 +118,20 @@ const Login = () => {
 
       toast.success("Successfully logged in!", { autoClose: 2000 });
       setTimeout(() => navigate("/"), 2000);
+      setIsLoading(false);
+
     } catch (err) {
       let errorMessage = "An unexpected error occurred";
-      if (err.code === "auth/invalid-email") {
-        errorMessage = "Please enter a valid email address";
-      } else if (err.code === "auth/wrong-password") {
-        errorMessage = "Invalid password";
-      } else if (err.code === "auth/user-not-found") {
+      if (err.message.includes("user-not-found")) {
         errorMessage = "User not found";
+      } else if (err.message.includes("wrong-password")) {
+        errorMessage = "Incorrect password";
       }
-      console.error(errorMessage, err);
-      setError(errorMessage);
-      setIsLoading(false);
+      console.error(errorMessage, err); 
+      setError(errorMessage); 
+      setIsLoading(false); 
     }
   };
-
 
   return (
     <div className="d-flex justify-content-center ">
