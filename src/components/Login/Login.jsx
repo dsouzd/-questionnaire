@@ -92,16 +92,6 @@ const Login = () => {
         formData.password,
         userData.password
       );
-      const email = await bcrypt.compare(formData.email, userData.email);
-
-      if(!email){
-        toast.error(t("login.error_no_account"), {
-          position: "top-center",
-          autoClose: 2000,
-        });
-        setIsLoading(false);
-        return;
-      }
 
       if (!password) {
         toast.error(t("login.wrong_password"), {
