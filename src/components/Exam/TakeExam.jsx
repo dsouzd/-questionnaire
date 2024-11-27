@@ -23,7 +23,7 @@ const TakeExam = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const examCompleted = localStorage.getItem("examCompleted");
+    const examCompleted = localStorage.getItem("examCompleted"); //parsing data from local storage
     if (examCompleted === "true") {
       setExamComplete(true);
       return;
