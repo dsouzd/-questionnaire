@@ -13,7 +13,7 @@ const ExamInstructions = () => {
           position: "top-center",
           autoClose: 2000,
         });
-      navigate("/login");
+        navigate("/login");
     }
   });
 

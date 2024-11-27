@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 
 const Profile = () => {
-  const userDetails = JSON.parse(localStorage.getItem("userDetails")); // Parse user details from localStorage
+  const userDetails = JSON.parse(localStorage.getItem("userDetails")); 
   const navigate = useNavigate();
 
   if (!userDetails) {
